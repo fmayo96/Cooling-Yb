@@ -7,7 +7,7 @@ def N_planck(beta, omega):
     return 1/(np.exp(beta*omega) - 1)
 
 #--------------------------Parametros-----------------------------
-N_steps = 100000
+N_steps = 10000
 dt = 1e-3
 tf = N_steps*dt
 w = 1
@@ -15,7 +15,9 @@ w_laser = 10*w
 g = 0.5
 gamma = 0.1
 alpha = 0.5
-beta = np.linspace(0.1,15,20)
+#T = np.linspace(5e-2, 1, 20)
+beta = np.linspace(1,20,20)
+T = 1/beta
 
 
 heat_current = []
@@ -37,7 +39,11 @@ for j in range(len(beta)):
     M = np.array([[-gamma_pl,gamma_mn,0,0,gamma,gamma,gamma],[gamma_pl,-(gamma_pl+gamma_mn),gamma_mn,0,gamma,gamma,gamma],[0,gamma_pl,-(gamma_pl + gamma_mn),gamma_mn,gamma,gamma,gamma],[0,0,gamma_pl,-(alpha + gamma_mn),gamma,gamma,gamma],[0,0,0,alpha,-(4*gamma + gamma_pl),gamma_mn,0],[0,0,0,0,gamma_pl,-(4*gamma + gamma_pl + gamma_mn),gamma_mn],[0,0,0,0,0,gamma_pl,-(4*gamma + gamma_mn)]])
 
     for i in range(N_steps-1):
-        rho[i+1] = rho[i] + dt*np.dot(M,rho[i])
+        K1 = np.dot(M,rho[i])
+        K2 = np.dot(M,rho[i] + dt*K1/2)
+        K3 = np.dot(M,rho[i] + dt*K2/2)
+        K4 = np.dot(M,rho[i] + dt*K3)
+        rho[i+1] = rho[i] + dt/6*(K1 + 2*K2 + 2*K3 + K4)
     t = np.linspace(0,tf,N_steps)
     x = [0,w,2*w,3*w,3*w+w_laser,4*w+w_laser,5*w+w_laser]
     #------------------------------Heat-----------------------------
@@ -72,7 +78,11 @@ for j in range(len(beta)):
     M = np.array([[-gamma_pl,gamma_mn,0,0,gamma,gamma,gamma],[gamma_pl,-(gamma_pl+gamma_mn),gamma_mn,0,gamma,gamma,gamma],[0,gamma_pl,-(gamma_pl + gamma_mn + alpha),gamma_mn,gamma,gamma,gamma],[0,0,gamma_pl,-(alpha + gamma_mn),gamma,gamma,gamma],[0,0,alpha,alpha,-(4*gamma + gamma_pl),gamma_mn,0],[0,0,0,0,gamma_pl,-(4*gamma + gamma_pl + gamma_mn),gamma_mn],[0,0,0,0,0,gamma_pl,-(4*gamma + gamma_mn)]])
 
     for i in range(N_steps-1):
-        rho[i+1] = rho[i] + dt*np.dot(M,rho[i])
+        K1 = np.dot(M,rho[i])
+        K2 = np.dot(M,rho[i] + dt*K1/2)
+        K3 = np.dot(M,rho[i] + dt*K2/2)
+        K4 = np.dot(M,rho[i] + dt*K3)
+        rho[i+1] = rho[i] + dt/6*(K1 + 2*K2 + 2*K3 + K4)
     t = np.linspace(0,tf,N_steps)
     x = [0,w,2*w,3*w,3*w+w_laser,4*w+w_laser,5*w+w_laser]
     #------------------------------Heat-----------------------------
@@ -91,13 +101,13 @@ for j in range(len(beta)):
     heat_current_2.append(Q_f)
 
 
-
 plt.figure()
-plt.plot(beta,heat_current,'o', label = '1 Laser')
-plt.plot(beta,heat_current_2,'C3o', label = '2 Laser')
-plt.xlabel(r'$\beta$', fontsize = 12)
+plt.plot(T,heat_current,'o', label = '1 Laser')
+plt.plot(T,heat_current_2,'C3o', label = '2 Laser')
+plt.xlabel(r'$T_{crystal}$', fontsize = 12)
 plt.ylabel(r'$\dot{Q}$', fontsize = 12)
 plt.yscale('log')
+plt.xscale('log')
 plt.legend(fontsize = 11)
 plt.show()
 
