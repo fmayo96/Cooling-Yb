@@ -17,6 +17,7 @@ def Steady_state(T, j_0_3, j_0_4):
     beta = 1/(kB*T)
     Omega_3 = Rabifreq(j_0_3*1000)
     Omega_4 = Rabifreq(j_0_4*1000)
+    print('Omega_4=',Omega_4*1e-9,'ns^-1')
     #Transition rates:
     gamma_mn_1 = gamma_nr*(N(beta,w1) + 1)
     gamma_mn_2 = gamma_nr*(N(beta,w2) + 1)

@@ -9,7 +9,7 @@ h = 6.62607015e-34  # in J s
 hbar = h/(2*pi)
 c = 2.99792458e10   # cm/s
 kB = 1.380649e-23   # J/K
-eps0 = 8.854e-14    # F/m = C/ (V cm)
+eps0 = 8.8541878128e-14    # F/cm = C/ (V cm)
 # Dipolar moment
 d = 3.34e-31 # C cm
 

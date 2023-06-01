@@ -22,7 +22,7 @@ def Net_Power(T, j_0_3, j_0_4):
                             steady_state[5] - initial_state[5],
                             steady_state[6] - initial_state[6]])
 
-    eps_vib_C1 = E3 + np.sum( E_gs * Delta_rho_gs / rho_0 ) # eV
+    eps_vib_C1 = E3 + np.sum( E_gs * Delta_rho_gs / rho_0 ) # J
 
     eps_vib_C2 = np.sum( E_es * steady_state[4:] / rho_0 ) + E3 - E4 - .25 * np.sum(E_gs)
 
@@ -45,7 +45,7 @@ def Net_Power(T, j_0_3, j_0_4):
     alpha_imp = 4e-4 # cm-1
     alpha_rad = 1e-2 # cm-1
 
-    P_im = (j_0_4 + j_0_4) * alpha_imp *1000
+    P_im = (j_0_3 + j_0_4) * alpha_imp *1000
 
     
     P_abs = (j_0_3 + j_0_4) * (alpha_imp + alpha_rad) * 1000
@@ -69,7 +69,7 @@ def Net_Power(T, j_0_3, j_0_4):
     """
     return P_net
 
-Pow_300_06 = Net_Power(300, 0, 0.6)
+Pow_300_06 = Net_Power(300, 0, 0.69)
 
 
 
