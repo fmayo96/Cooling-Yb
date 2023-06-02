@@ -26,8 +26,9 @@ gamma = 314.5
 gamma_nr = 1e12 
 #Refraction index
 n = 1.45
-
-
+#Absortion Coefficients
+alpha_imp = 4e-4 # cm-1
+alpha_rad = 1e-2 # cm-1
 #Energy levels
 E0 = 0
 E1 = w1

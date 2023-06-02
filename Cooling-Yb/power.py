@@ -9,6 +9,7 @@ from steady_state import *
 def Net_Power(T, j_0_3, j_0_4):
     beta = 1/(kB*T)
     steady_state = Steady_state(T,j_0_3,j_0_4)
+    print(steady_state)
     initial_state = Thermal_state(beta,H)
     
     rho_0 = np.sum(steady_state[4:])
@@ -42,18 +43,15 @@ def Net_Power(T, j_0_3, j_0_4):
     P_nr = n_ion * N_e * rho_0 * ( gamma * eps_vib_H1 + W_NR * eps_vib_H2 ) 
     
 
-    alpha_imp = 4e-4 # cm-1
-    alpha_rad = 1e-2 # cm-1
-
-    P_im = (j_0_3 + j_0_4) * alpha_imp *1000
+    P_im = (j_0_3 + j_0_4) * alpha_imp *1000000
 
     
-    P_abs = (j_0_3 + j_0_4) * (alpha_imp + alpha_rad) * 1000
+    P_abs = (j_0_3 + j_0_4) * (alpha_imp + alpha_rad) * 1000000
     
     P_heat = P_nr + P_im
     P_net = P_heat - P_cool
     eta = -P_net/P_abs
-    """
+    
     print('Pump intensity 4 =', j_0_4, ' MW / cm2 \n')
     print('Pump intensity 3 =', j_0_3, ' MW / cm2 \n')
     print('P_nr =', P_nr, 'W / cm3')
@@ -66,7 +64,7 @@ def Net_Power(T, j_0_3, j_0_4):
 
     print('P_abs =', P_abs, 'W / cm3 \n')
     print('eta_c = - P_net / P_abs =', eta)
-    """
+    
     return P_net
 
 Pow_300_06 = Net_Power(300, 0, 0.69)

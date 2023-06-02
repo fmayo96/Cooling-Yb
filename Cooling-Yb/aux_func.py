@@ -12,5 +12,5 @@ def N(beta,omega):
     return 1/(np.exp(beta*omega)-1)
 
 def Thermal_state(beta, H):
-    return np.diag(np.diag(np.exp(-beta*H)))/np.sum(np.diag(np.exp(-beta*H)))
+    return np.exp(-beta*H)/np.sum(np.exp(-beta*H))
 
