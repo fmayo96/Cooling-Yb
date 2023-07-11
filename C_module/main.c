@@ -23,14 +23,19 @@ const double n = 1.45;
 const double alpha_imp = 4e-4;
 const double alpha_rad = 1e-2;
 const int dim = 7;
+const double k12 = 6.35e11;
+const double k23 = 2.8e11;
+const double k34 = 2.25e11;
+const double k56 = 5.4e11;
+const double k67 = 4.1e11;
 
 // Transition energies
-const double w = 9811*h*c;
 const double w1 = 237*h*c;
 const double w2 = 138*h*c;
 const double w3 = 102*h*c;
-const double w4 = 132*h*c;
-const double w5 = 150*h*c;
+const double w = 9811*h*c;
+const double w5 = 132*h*c;
+const double w6 = 150*h*c;
 
 //Energy levels
 const double E0 = 0;
@@ -38,14 +43,16 @@ const double E1 = w1;
 const double E2 = E1+w2;
 const double E3 = E2+w3;
 const double E4 = E3+w;
-const double E5 = E4+w4;
-const double E6 = E5+w5;
+const double E5 = E4+w5;
+const double E6 = E5+w6;
 //===============================================//
 
 int main(){
-    double complex *thermal_state;
-    thermal_state = (double complex *) calloc(dim*dim, sizeof(double complex));
+    double complex *state;
+    state = (double complex *) calloc(dim*dim, sizeof(double complex));
     
-    
+
+
+    free(state);
     return 0;
 }
