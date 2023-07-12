@@ -4,7 +4,7 @@
 #include <complex.h>
 #include "constants.h"
 #include "aux.h"
-
+#include "time_evol.h"
 void Time_evol(double complex *state, double tf, double dt, double temp, double j_0_3, double j_0_4){
     int N = (int) (tf/dt), i;
     
