@@ -10,7 +10,7 @@
 //Fundamental constants
 const double pi = 3.14159;
 const double h = 6.62607015e-34;
-const double hbar = h/(2*pi);
+double hbar;
 const double c = 2.99792458e10;
 const double kb = 1.380649e-23;
 const double eps0 = 8.8541878128e-14;
@@ -30,27 +30,42 @@ const double k56 = 5.4e11;
 const double k67 = 4.1e11;
 
 // Transition energies
-const double w1 = 237*h*c;
-const double w2 = 138*h*c;
-const double w3 = 102*h*c;
-const double w = 9811*h*c;
-const double w5 = 132*h*c;
-const double w6 = 150*h*c;
+double w1;
+double w2;
+double w3;
+double w ;
+double w5;
+double w6;
 
 //Energy levels
-const double E0 = 0;
-const double E1 = w1;
-const double E2 = E1+w2;
-const double E3 = E2+w3;
-const double E4 = E3+w;
-const double E5 = E4+w5;
-const double E6 = E5+w6;
+double E0;
+double E1;
+double E2;
+double E3;
+double E4;
+double E5;
+double E6;
 //===============================================//
 
 int main(){
     int i,j;
-    double temp = 300, tf = 1e-5, dt = 1e-13, j_0_3 = 0, j_0_4 = 0.6, trace;
+    double temp = 300, tf = (double) 1/spont_em, dt = 1e-12, j_0_3 = 0, j_0_4 = 0.6, trace;
     double complex *state;
+    hbar = h/(2*pi);
+    w1 = 237*h*c;
+    w2 = 138*h*c;
+    w3 = 102*h*c;
+    w = 9811*h*c;
+    w5 = 132*h*c;
+    w6 = 150*h*c;
+    E0 = 0;
+    E1 = w1;
+    E2 = E1+w2;
+    E3 = E2+w3;
+    E4 = E3+w;
+    E5 = E4+w5;
+    E6 = E5+w6;
+
     state = (double complex *) calloc(dim*dim, sizeof(double complex));
     Thermal_state(state, temp);    
     for(i = 0; i < dim; i++){
