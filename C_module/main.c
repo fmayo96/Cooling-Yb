@@ -3,8 +3,8 @@
 #include <string.h>
 #include <math.h>
 #include <complex.h>
-#include "constants.h"
 #include "aux.h"
+#include "time_evol.h"
 
 //=================Parameters===============//
 //Fundamental constants
@@ -48,11 +48,29 @@ const double E6 = E5+w6;
 //===============================================//
 
 int main(){
+    int i,j;
+    double temp = 300, tf = 1e-5, dt = 1e-13, j_0_3 = 0, j_0_4 = 0.6, trace;
     double complex *state;
     state = (double complex *) calloc(dim*dim, sizeof(double complex));
-    
-
-
+    Thermal_state(state, temp);    
+    for(i = 0; i < dim; i++){
+        for(j = 0; j < dim; j++){
+            printf("%e ", creal(*(state + dim*i + j)));
+        }
+        printf("\n");
+    }
+    trace = Trace(state);
+    printf("Initial state trace = %.4lf \n", trace);
+    printf("\n");
+    Time_evol(state, tf, dt, temp, j_0_3, j_0_4);
+    for(i = 0; i < dim; i++){
+        for(j = 0; j < dim; j++){
+            printf("%e ", creal(*(state + dim*i + j)));
+        }
+        printf("\n");
+    }
+    trace = Trace(state);
+    printf("Final state trace = %.4lf \n", trace);
     free(state);
     return 0;
 }

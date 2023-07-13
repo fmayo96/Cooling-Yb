@@ -36,3 +36,12 @@ double Rabifreq(double j_0){
     E_0 = sqrt((double)2*j_0/(c*n*eps0));
     return (double) d*E_0/hbar;
 }
+
+double Trace(double complex *state){
+    int i;
+    double trace = 0;
+    for(i = 0; i < dim; i++){
+        trace += creal(*(state + dim*i + i));
+    }
+    return trace;
+}

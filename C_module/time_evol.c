@@ -7,9 +7,10 @@
 #include "time_evol.h"
 void Time_evol(double complex *state, double tf, double dt, double temp, double j_0_3, double j_0_4){
     int N = (int) (tf/dt), i;
-    
+    printf("N = %d", N);
     for(i = 0; i < N; i++){
         RK4_step(state, dt, temp, j_0_3, j_0_4);
+        printf("Progress = %.2lf \r", (double)i/N*100);
     }
 }
 
@@ -118,6 +119,24 @@ void Diff(double complex *diff_state, double complex *state, double temp, double
             *(diff_state + dim*i + i) -= gamma_nr * *(state + dim*i + i);
         }
     }
-    
 
+    for(i = 0; i < 4; i++){
+        *(diff_state + dim*i + i) += spont_em*(*(state + dim*4 + 4) + *(state + dim*5 + 5) + *(state + dim*6 + 6));
+    }    
+    for(i = 4; i < dim; i++){
+        *(diff_state + dim*i + i) -= 4 * spont_em * *(state + dim*i + i);
+    }
+
+    for(i = 0; i < dim; i++){
+        for(j = 4; j < 7; j++){
+            *(diff_state + dim*i + j) = -0.5 * gamma_nr * *(state + dim*i + j);
+        }
+    }
+    for(i = 4; i < dim; i++){
+        for(j = 0; j < dim; j++){
+            *(diff_state + dim*i + j) = -0.5 * gamma_nr * *(state + dim*i + j);
+        }
+    }
+    free(ks);
+    free(ws);
 }
