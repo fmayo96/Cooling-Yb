@@ -10,7 +10,7 @@ void Time_evol(double complex *state, double tf, double dt, double temp, double 
     printf("N = %d", N);
     for(i = 0; i < N; i++){
         RK4_step(state, dt, temp, j_0_3, j_0_4);
-        printf("Progress = %.2lf \r", (double)i/N*100);
+        printf("\r Progress = %.2lf", (double)i/N*100);
     }
 }
 
@@ -127,16 +127,27 @@ void Diff(double complex *diff_state, double complex *state, double temp, double
         *(diff_state + dim*i + i) -= 4 * spont_em * *(state + dim*i + i);
     }
 
-    for(i = 0; i < dim; i++){
-        for(j = 4; j < 7; j++){
-            *(diff_state + dim*i + j) = -0.5 * gamma_nr * *(state + dim*i + j);
+    for(i = 0; i < 3; i++){
+        for(j = 4; j < dim; j++){
+            *(diff_state + dim*i + j) -= 0.5 * gamma_nr * *(state + dim*i + j);
         }
     }
     for(i = 4; i < dim; i++){
-        for(j = 0; j < dim; j++){
-            *(diff_state + dim*i + j) = -0.5 * gamma_nr * *(state + dim*i + j);
+        for(j = 0; j < 3; j++){
+            *(diff_state + dim*i + j) -= 0.5 * gamma_nr * *(state + dim*i + j);
         }
     }
+
+    for(i = 0; i < dim-1; i++){
+        *(diff_state + dim*i + (i+1)) -= 0.5*gamma_nr * *(state + dim*i + i+1);
+        *(diff_state + dim*(i+1) + i) -= 0.5*gamma_nr * *(state + dim*(i+1) + i);
+    }
+    for(i = 1; i< dim; i++){
+        *(diff_state + dim*i + (i-1)) -= 0.5*gamma_nr * *(state + dim*i + i-1);
+        *(diff_state + dim*(i-1) + i) -= 0.5*gamma_nr * *(state + dim*(i-1) + i);
+    }
+
+
     free(ks);
     free(ws);
 }

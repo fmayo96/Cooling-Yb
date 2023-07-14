@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <complex.h>
+#include <time.h>
 #include "aux.h"
 #include "time_evol.h"
 
@@ -49,7 +50,7 @@ double E6;
 
 int main(){
     int i,j;
-    double temp = 300, tf = (double) 1/spont_em, dt = 1e-12, j_0_3 = 0, j_0_4 = 0.6, trace;
+    double temp = 300, tf = 1e-5, dt = 1e-12, j_0_3 = 0, j_0_4 = 0.6, trace;
     double complex *state;
     hbar = h/(2*pi);
     w1 = 237*h*c;
@@ -68,24 +69,39 @@ int main(){
 
     state = (double complex *) calloc(dim*dim, sizeof(double complex));
     Thermal_state(state, temp);    
+
+    clock_t begin = clock();
+
+char filename[255];
+    sprintf(filename,"data_tf=%e.txt", tf);
+
+    FILE *fp=fopen(filename,"w");
+
     for(i = 0; i < dim; i++){
         for(j = 0; j < dim; j++){
-            printf("%e ", creal(*(state + dim*i + j)));
+            fprintf(fp, "%e ", creal(*(state + dim*i + j)));
         }
-        printf("\n");
+        fprintf(fp, "\n");
     }
     trace = Trace(state);
-    printf("Initial state trace = %.4lf \n", trace);
-    printf("\n");
+    fprintf(fp, "Initial state trace = %.4lf \n", trace);
+    fprintf(fp, "\n");
     Time_evol(state, tf, dt, temp, j_0_3, j_0_4);
+    
     for(i = 0; i < dim; i++){
         for(j = 0; j < dim; j++){
-            printf("%e ", creal(*(state + dim*i + j)));
+            fprintf(fp,"%e ", creal(*(state + dim*i + j)));
         }
-        printf("\n");
+        fprintf(fp,"\n");
     }
     trace = Trace(state);
-    printf("Final state trace = %.4lf \n", trace);
+    fprintf(fp, "Final state trace = %.4lf \n", trace);
+
+    clock_t end = clock();
+
+    fprintf(fp, "Execution time = %.4lf", (double) (end - begin) / CLOCKS_PER_SEC);
+
+    fclose(fp);
     free(state);
     return 0;
 }
