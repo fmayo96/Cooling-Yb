@@ -7,10 +7,8 @@
 #include "time_evol.h"
 void Time_evol(double complex *state, double tf, double dt, double temp, double j_0_3, double j_0_4){
     int N = (int) (tf/dt), i;
-    printf("N = %d", N);
     for(i = 0; i < N; i++){
         RK4_step(state, dt, temp, j_0_3, j_0_4);
-        printf("\r Progress = %.2lf", (double)i/N*100);
     }
 }
 
