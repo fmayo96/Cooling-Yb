@@ -50,7 +50,7 @@ double E6;
 
 int main(){
     int i,j;
-    double temp = 300, tf = 1e-5, dt = 1e-12, j_0_3 = 0, j_0_4 = 0.6, trace;
+    double temp = 300, tf = 1e-10, dt = 1e-12, j_0_3 = 0, j_0_4 = 0.6, trace, rho_0;
     double complex *state;
     hbar = h/(2*pi);
     w1 = 237*h*c;
@@ -66,14 +66,14 @@ int main(){
     E4 = E3+w;
     E5 = E4+w5;
     E6 = E5+w6;
-
+    clock_t begin = clock();
     state = (double complex *) calloc(dim*dim, sizeof(double complex));
     Thermal_state(state, temp);    
+    rho_0 = Rho_0(state);
 
-    clock_t begin = clock();
 
 char filename[255];
-    sprintf(filename,"data_tf=%e.txt", tf);
+    sprintf(filename,"outs/data_tf=%e.txt", tf);
 
     FILE *fp=fopen(filename,"w");
 
@@ -85,9 +85,11 @@ char filename[255];
     }
     trace = Trace(state);
     fprintf(fp, "Initial state trace = %.4lf \n", trace);
+    fprintf(fp, "rho_0 = %e \n", rho_0);
     fprintf(fp, "\n");
     Time_evol(state, tf, dt, temp, j_0_3, j_0_4);
-    
+    rho_0 = Rho_0(state);
+
     for(i = 0; i < dim; i++){
         for(j = 0; j < dim; j++){
             fprintf(fp,"%e ", creal(*(state + dim*i + j)));
@@ -96,7 +98,7 @@ char filename[255];
     }
     trace = Trace(state);
     fprintf(fp, "Final state trace = %.4lf \n", trace);
-
+    fprintf(fp, "rho_0 = %e \n", rho_0);
     clock_t end = clock();
 
     fprintf(fp, "Execution time = %.4lf", (double) (end - begin) / CLOCKS_PER_SEC);

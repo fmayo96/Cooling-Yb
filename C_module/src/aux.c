@@ -45,3 +45,12 @@ double Trace(double complex *state){
     }
     return trace;
 }
+
+double Rho_0(double complex *state){
+    int i;
+    double rho_0 = 0;
+    for(i = 4; i < dim; i++){
+        rho_0 += creal(*(state + dim*i + i));
+    }
+    return rho_0;
+}

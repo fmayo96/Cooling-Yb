@@ -72,7 +72,7 @@ void Diff(double complex *diff_state, double complex *state, double temp, double
     ks = (double *) calloc(6, sizeof(double));
     ws = (double *) calloc(6, sizeof(double));
     Rabi4 = Rabifreq(j_0_4);
-    *ks = k12; *(ks + 1) = k23; *(ks + 2) = k34; *(ks + 3) = Rabi4; *(ks + 4) = k56; *(ks + 5) = k67;  
+    *ks = k12; *(ks + 1) = k23; *(ks + 2) = k34; *(ks + 3) = (double)Rabi4/sqrt(Thermal_num(temp, w)); *(ks + 4) = k56; *(ks + 5) = k67;  
     *ws = w1; *(ws + 1) = w2; *(ws + 2) = w3; *(ws + 3) = w; *(ws + 4) = w5; *(ws + 5) = w6; 
 
     for(i = 1; i < dim-1; i++){
