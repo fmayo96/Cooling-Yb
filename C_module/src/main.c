@@ -6,6 +6,7 @@
 #include <time.h>
 #include "aux.h"
 #include "time_evol.h"
+#include "power.h"
 
 //=================Parameters===============//
 //Fundamental constants
@@ -50,8 +51,7 @@ double E6;
 
 int main(){
     int i,j;
-    double temp = 300, tf = 1e-8, dt = 1e-14, j_0_3 = 0, j_0_4 = 0.6, trace, rho_0;
-    double complex *state;
+    double temp = 300, tf = 1e-3, dt = 5e-13, j_0_3 = 0, j_0_4 = 0.6, trace, rho_0, net_pow;
     hbar = h/(2*pi);
     w1 = 237*h*c;
     w2 = 138*h*c;
@@ -67,43 +67,22 @@ int main(){
     E5 = E4+w5;
     E6 = E5+w6;
     clock_t begin = clock();
-    state = (double complex *) calloc(dim*dim, sizeof(double complex));
-    Thermal_state(state, temp);    
-    rho_0 = Rho_0(state);
-
+    
 
 char filename[255];
-    sprintf(filename,"outs/data_tf=%e.txt", tf);
+    sprintf(filename,"outs/net_pow_tf=%e.txt", tf);
 
     FILE *fp=fopen(filename,"w");
 
-    for(i = 0; i < dim; i++){
-        for(j = 0; j < dim; j++){
-            fprintf(fp, "%e ", creal(*(state + dim*i + j)));
-        }
-        fprintf(fp, "\n");
-    }
-    trace = Trace(state);
-    fprintf(fp, "Initial state trace = %.4lf \n", trace);
-    fprintf(fp, "rho_0 = %e \n", rho_0);
-    fprintf(fp, "\n");
-    Time_evol(state, tf, dt, temp, j_0_3, j_0_4);
-    rho_0 = Rho_0(state);
+    net_pow = Net_power(temp, j_0_3, j_0_4, tf, dt);
 
-    for(i = 0; i < dim; i++){
-        for(j = 0; j < dim; j++){
-            fprintf(fp,"%e ", creal(*(state + dim*i + j)));
-        }
-        fprintf(fp,"\n");
-    }
-    trace = Trace(state);
-    fprintf(fp, "Final state trace = %.4lf \n", trace);
-    fprintf(fp, "rho_0 = %e \n", rho_0);
+    fprintf(fp, "%lf \n", net_pow);
+   
     clock_t end = clock();
 
-    fprintf(fp, "Execution time = %.4lf", (double) (end - begin) / CLOCKS_PER_SEC);
+    fprintf(fp, "Execution time = %.4lf \n", (double) (end - begin) / CLOCKS_PER_SEC);
 
     fclose(fp);
-    free(state);
+   
     return 0;
 }

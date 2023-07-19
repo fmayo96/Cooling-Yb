@@ -65,11 +65,12 @@ void RK4_step(double complex *state, double dt, double temp, double j_0_3, doubl
 
 void Diff(double complex *diff_state, double complex *state, double temp, double j_0_3, double j_0_4){
     int i, j;
-    double Rabi4;
+    double Rabi4, Rabi3;
     double *ks, *ws;
     ks = (double *) calloc(6, sizeof(double));
     ws = (double *) calloc(6, sizeof(double));
     Rabi4 = Rabifreq(j_0_4);
+    Rabi3 = Rabifreq(j_0_3);
     *ks = k12; *(ks + 1) = k23; *(ks + 2) = k34; *(ks + 3) = (double)Rabi4/sqrt(Thermal_num(temp, w)); *(ks + 4) = k56; *(ks + 5) = k67;  
     *ws = w1; *(ws + 1) = w2; *(ws + 2) = w3; *(ws + 3) = w; *(ws + 4) = w5; *(ws + 5) = w6; 
 
