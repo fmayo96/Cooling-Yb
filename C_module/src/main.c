@@ -51,7 +51,7 @@ double E6;
 
 int main(){
     int i,j;
-    double temp = 300, tf = 1e-3, dt = 5e-13, j_0_3 = 0, j_0_4 = 0.6, trace, rho_0, net_pow;
+    double temp = 300, tf = 1e-4, dt = 5e-13, j_0_3 = 0, j_0_4 = 0.6, trace, rho_0, net_pow;
     hbar = h/(2*pi);
     w1 = 237*h*c;
     w2 = 138*h*c;

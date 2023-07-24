@@ -108,15 +108,17 @@ void Diff(double complex *diff_state, double complex *state, double temp, double
     *(diff_state + dim*(dim-1) + (dim-1)) = 1*I * *(state + dim*(dim-1) + (dim-1) - 1) * sqrt(Thermal_num(temp, *(ws + (dim-1)-1))) * *(ks+(dim-1)-1)
     - 1*I * *(state + dim*((dim-1)-1) + (dim-1)) * sqrt(Thermal_num(temp, *(ws + (dim-1)-1))) * *(ks + (dim-1)-1);
 
-    for(i = 0; i < dim-1; i++){
-        if(i != 3){
-            *(diff_state + dim*i + i) += gamma_nr * *(state + dim*(i+1) + (i+1));
-        }
+    for(i = 0; i < 3; i++){    
+        *(diff_state + dim*i + i) += gamma_nr * *(state + dim*(i+1) + (i+1));
     }    
-    for(i = 1; i < dim; i++){
-        if(i != 4){
+    for(i = 4; i < dim-1; i++){
+            *(diff_state + dim*i + i) += gamma_nr * *(state + dim*(i+1) + (i+1));
+    }    
+    for(i = 1; i < 4; i++){
+        *(diff_state + dim*i + i) -= gamma_nr * *(state + dim*i + i);
+    }
+    for(i = 5; i < dim; i++){
             *(diff_state + dim*i + i) -= gamma_nr * *(state + dim*i + i);
-        }
     }
 
     for(i = 0; i < 4; i++){
@@ -145,8 +147,6 @@ void Diff(double complex *diff_state, double complex *state, double temp, double
         *(diff_state + dim*i + (i-1)) -= 0.5*gamma_nr * *(state + dim*i + i-1);
         *(diff_state + dim*(i-1) + i) -= 0.5*gamma_nr * *(state + dim*(i-1) + i);
     }
-
-
     free(ks);
     free(ws);
 }
