@@ -6,7 +6,9 @@ Todas las magnitudes que definen ellos en el paper están en las unidades que co
 
 Hay dos programas distintos para calcular las cosas. 
 
-## Uno es el código en C que está en la carpeta ```C_module```. Este código se compila con el comando ```make``` y se ejecuta con ``` ./main.e```.
+## Código en C.
+
+Uno es el código en C que está en la carpeta ```C_module```. Este código se compila con el comando ```make``` y se ejecuta con ``` ./main.e```.
 
 El programa resuelve la ecuación maestra que usan ellos en el paper integrando numéricamente con un método Runge-Kutta 4, y se obtienen como resultados el estado inicial y final del sistema, que es todo lo necesario para calcular las diferentes contribuciones a la potencia neta. También agregué el cálculo de potencia, pero por ahora está funcionando mal, tiene algún error. El problema de resolver de esta forma es que es muy lento. Tarda aproximadamente 4 horas y media para calcular cada punto de la potencia neta. 
 
