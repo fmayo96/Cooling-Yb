@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt 
 from power import Net_Power 
 
-Temps = [400,330,250,170]
+Temps = [300,150,100,70]
 
 j_0_4 = np.linspace(0,1.8,200)
 

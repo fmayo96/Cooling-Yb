@@ -47,13 +47,13 @@ E6 = E5 + w5
 E_gs = np.array([E0,E1,E2,E3])
 E_es = np.array([E4,E5,E6])
 
-H = np.zeros([7,7])
-H[0,0] = E0
-H[1,1] = E1
-H[2,2] = E2
-H[3,3] = E3
-H[4,4] = E4
-H[5,5] = E5
-H[6,6] = E6
+H = np.zeros(7)
+H[0] = E0
+H[1] = E1
+H[2] = E2
+H[3] = E3
+H[4] = E4
+H[5] = E5
+H[6] = E6
 
 

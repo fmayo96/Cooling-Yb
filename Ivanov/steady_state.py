@@ -17,41 +17,80 @@ def Steady_state(T, j_0_3, j_0_4):
     beta = 1/(kB*T)
     Omega_3 = Rabifreq(j_0_3*1000000)
     Omega_4 = Rabifreq(j_0_4*1000000)
-    print('Omega_4=',Omega_4*1e-9,'ns^-1')
+    
     #Transition rates:
-    gamma_mn_1 = gamma_nr*(N(beta,w1) + 1)
-    gamma_mn_2 = gamma_nr*(N(beta,w2) + 1)
-    gamma_mn_3 = gamma_nr*(N(beta,w3) + 1)
-    gamma_mn_5 = gamma_nr*(N(beta,w4) + 1)
-    gamma_mn_6 = gamma_nr*(N(beta,w5) + 1)
-    gamma_pl_1 = gamma_nr*N(beta,w1)
-    gamma_pl_2 = gamma_nr*N(beta,w2)
-    gamma_pl_3 = gamma_nr*N(beta,w3)
-    gamma_pl_5 = gamma_nr*N(beta,w4)
-    gamma_pl_6 = gamma_nr*N(beta,w5)
-    b = np.zeros(12, dtype=complex)
-    b[0:5] = -gamma
-    b[5] = -gamma_mn_6
+    dim = 7
+    b = np.zeros(dim**2, dtype=complex)
+    M = np.zeros([dim**2, dim**2], dtype = complex)
+    ks = [k_12, k_23, k_34, Omega_4/np.sqrt(N(beta, w)), k_56, k_67]
+    ws = [w1, w2, w3, w, w4, w5]
+    for i in range(1, dim-1):
+        for j in range(1, dim-1):
+            M[dim*i + j, dim*i+j+1] = 1j*np.sqrt(N(beta, ws[j]))*ks[j]
+            M[dim*i + j, dim*i+j-1] = 1j*np.sqrt(N(beta, ws[j-1]))*ks[j-1]
+            M[dim*i + j, dim*(i+1)+j] = -1j*np.sqrt(N(beta, ws[i]))*ks[i]
+            M[dim*i + j, dim*(i-1)+j] = -1j*np.sqrt(N(beta, ws[i-1]))*ks[i-1]
+    #===i=0
+    for j in range(1, dim-1):
+        M[j, dim*0+j+1] = 1j*np.sqrt(N(beta, ws[j]))*ks[j]
+        M[j, dim*0+j-1] = 1j*np.sqrt(N(beta, ws[j-1]))*ks[j-1]
+        M[j, dim*(0+1)+j] = -1j*np.sqrt(N(beta, ws[0]))*ks[0]
+    #===i=0, j=0
+    M[0,1] = 1j*np.sqrt(N(beta, ws[0]))*ks[0]
+    M[0,dim] = -1j*np.sqrt(N(beta, ws[1]))*ks[1]
+    #===i=dim-1
+    for j in range(1, dim-1):
+        M[dim*(dim-1) + j, dim*(dim-1)+j+1] = 1j*np.sqrt(N(beta, ws[j]))*ks[j]
+        M[dim*(dim-1) + j, dim*(dim-1)+j-1] = 1j*np.sqrt(N(beta, ws[j-1]))*ks[j-1]
+        M[dim*(dim-1) + j, dim*((dim-1)-1)+j] = -1j*np.sqrt(N(beta, ws[(dim-1)-1]))*ks[(dim-1)-1]
+    #===i=dim-1, j=dim-1
+    M[dim*(dim-1) + (dim-1), dim*(dim-1)+(dim-1)-1] = 1j*np.sqrt(N(beta, ws[(dim-1)-1]))*ks[(dim-1)-1]
+    M[dim*(dim-1) + (dim-1), dim*((dim-1)-1)+(dim-1)] = -1j*np.sqrt(N(beta, ws[(dim-1)-1]))*ks[(dim-1)-1]   
+    #===j=0
+    for i in range(1, dim-1):
+        M[dim*i, dim*i+1] = 1j*np.sqrt(N(beta, ws[0]))*ks[0]
+        M[dim*i, dim*(i+1)] = -1j*np.sqrt(N(beta, ws[i]))*ks[i]
+        M[dim*i, dim*(i-1)] = -1j*np.sqrt(N(beta, ws[i-1]))*ks[i-1]
+    #===j=dim-1
+    for i in range(1, dim-1):
+        M[dim*i + (dim-1), dim*i+(dim-1)-1] = 1j*np.sqrt(N(beta, ws[(dim-1)-1]))*ks[(dim-1)-1]
+        M[dim*i + (dim-1), dim*(i+1)+(dim-1)] = -1j*np.sqrt(N(beta, ws[i]))*ks[i]
+        M[dim*i + (dim-1), dim*(i-1)+(dim-1)] = -1j*np.sqrt(N(beta, ws[i-1]))*ks[i-1]
+    #===i=0, j=dim-1
+    M[dim-1, dim-2] = 1j*np.sqrt(N(beta, ws[dim-2]))*ks[dim-2]
+    M[dim-1, dim+dim-1] = -1j*np.sqrt(N(beta, ws[0]))*ks[0]
+    #===i=dim-1, j=0
+    M[dim*(dim-1), dim*(dim-1)+1] = 1j*np.sqrt(N(beta, ws[0]))*ks[0]
+    M[dim*(dim-1), dim*(dim-2)] = -1j*np.sqrt(N(beta, ws[dim-2]))*ks[dim-2]
+    
+    for i in range(0,3):
+        for j in range(4,dim):
+            M[dim*i+j, dim*i+j] -= 0.5*gamma_nr
 
-    M = np.zeros([12,12], dtype = complex)
-    M[0,0],M[0,1],M[0,2],M[0,3] = -(gamma_pl_1 + gamma), gamma_mn_1 - gamma, -gamma, -gamma
-    M[1,0],M[1,1],M[1,2],M[1,3] = gamma_pl_1 - gamma, -(gamma_mn_1 + gamma_pl_2 + gamma), gamma_mn_2 - gamma, -gamma
-    M[2,0],M[2,1],M[2,2],M[2,3],M[2,8],M[2,9] = -gamma, gamma_pl_2 - gamma, -(gamma_mn_2 + gamma_pl_3 + gamma), gamma_mn_3 - gamma, 1j*Omega_3,-1j*Omega_3
-    M[3,0],M[3,1],M[3,2],M[3,3],M[3,10],M[3,11] = -gamma,-gamma, gamma_pl_3 - gamma, -(gamma_mn_3 + gamma), 1j*Omega_4,-1j*Omega_4
-    M[4,4],M[4,5],M[4,8],M[4,9],M[4,10],M[4,11] = -4*gamma-gamma_pl_5,gamma_mn_5,-1j*Omega_3,1j*Omega_3,-1j*Omega_4,1j*Omega_4
-    M[5,0],M[5,1],M[5,2],M[5,3],M[5,4],M[5,5] = -gamma_mn_6,-gamma_mn_6,-gamma_mn_6,-gamma_mn_6,gamma_pl_5 - gamma_mn_6, -(gamma_mn_5 + gamma_mn_6 + gamma_pl_6 +4*gamma)
-    M[6,6],M[6,8],M[6,11] = -1j*(E2-E3)/hbar-0.5*(gamma_mn_2+gamma_mn_3+gamma_pl_3),1j*Omega_4,-1j*Omega_3
-    M[7,7],M[7,9],M[7,10] = -1j*(E3-E2)/hbar-0.5*(gamma_mn_2+gamma_mn_3+gamma_pl_3),-1j*Omega_4,1j*Omega_3
-    M[8,2],M[8,4],M[8,6],M[8,8] = 1j*Omega_3,-1j*Omega_3,1j*Omega_4,-1j*(E2-E4)/hbar-0.5*(gamma_mn_2+gamma_pl_3+gamma_pl_5)
-    M[9,2],M[9,4],M[9,7],M[9,9] = -1j*Omega_3,1j*Omega_3,-1j*Omega_4,1j*(E2-E4)/hbar-0.5*(gamma_mn_2+gamma_pl_3+gamma_pl_5)
-    M[10,3],M[10,4],M[10,7],M[10,10] = 1j*Omega_4,-1j*Omega_4,1j*Omega_3,-1j*(E3-E4)/hbar-0.5*(gamma_mn_3-gamma_pl_5)
-    M[11,3],M[11,4],M[11,6],M[11,11] = -1j*Omega_4,1j*Omega_4,-1j*Omega_3,1j*(E3-E4)/hbar-0.5*(gamma_mn_3-gamma_pl_5)
+    for i in range(0, dim-1):
+        M[dim*i + i + 1, dim*i + i + 1] -= 0.5*gamma_nr
+    
+    for i in range(0, dim-1):
+        if i !=3:
+            M[dim*i+i, dim*(i+1) + i+1] += gamma_nr 
+    for i in range(1, dim):
+        if i != 4:
+            M[dim*i+i, dim*i + i] -= gamma_nr
+
+    for i in range(4,dim):
+        M[dim*i + i, dim*i + i] -= 4*gamma
+    for i in range(0,4):
+        for j in range(4, dim):
+            M[dim*i+i, dim*j+j] += gamma
+
+   
+
+    print(np.linalg.det(M))
 
 
-    rho_ss = scipy.linalg.solve(M,b)
+    
+    return 0 
 
-
-    return np.append( np.real(rho_ss[0:6]), 1 - np.sum(np.real(rho_ss[0:6])) )
-
+Steady_state(300,0,0.6)
 
 
