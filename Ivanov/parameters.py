@@ -25,11 +25,11 @@ gamma = 314.5
 #Non resonant transition rates in s^-1
 gamma_nr = 1e12 
 #Vibronic couplings in s^-1 (k/hbar)
-k_12 = 6.35e11* hbar # ns-1 * hbar
-k_23 = 2.8e11 * hbar
-k_34 = 2.25e11 * hbar
-k_56 = 5.4e11 * hbar
-k_67 = 4.1e11 * hbar
+k_12 = 6.35e11
+k_23 = 2.8e11 
+k_34 = 2.25e11
+k_56 = 5.4e11 
+k_67 = 4.1e11 
 
 #Refraction index
 n = 1.45

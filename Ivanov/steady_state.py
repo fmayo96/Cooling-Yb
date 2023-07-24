@@ -85,7 +85,7 @@ def Steady_state(T, j_0_3, j_0_4):
 
    
 
-    print(np.linalg.det(M))
+    
 
 
     
