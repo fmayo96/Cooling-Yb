@@ -1,5 +1,3 @@
-// Check if remote repo gets updated 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
