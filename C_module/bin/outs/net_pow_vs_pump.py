@@ -22,6 +22,4 @@ plt.legend()
 plt.xlabel('Pump intensity ' + r'$MW/cm^2$', fontsize = 14)
 plt.ylabel('Net Cooling Power ' + r'$MW/cm^3$', fontsize = 14)
 plt.ylim([0,400])
-plt.savefig("single_laser.svg", format = 'svg')
 plt.show()  
-
