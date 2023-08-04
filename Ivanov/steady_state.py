@@ -1,7 +1,6 @@
 #Solve the equations to find the steady state 
 
 import numpy as np 
-import scipy.linalg
 from parameters import *
 from aux_func import *
 
@@ -59,8 +58,36 @@ def Steady_state(T, j_0_3, j_0_4):
         for i in range(6):
             Unit[dim*5+6, dim*i+i] = 1j*ks[5]*N(beta, ws[5])**0.5
             Unit[dim*5+6, dim*i+i] = 1j*ks[5]*N(beta, ws[5])**0.5
-    print(Unit[:-1, :-1])
-    print(np.linalg.det(Unit[:-1, :-1]))
+    
+    for i in range(dim-1):
+        if i != 3:
+            Diss[dim*i+i+1, dim*i+i+1] -= 0.5*gamma_nr
+    for i in range(4):
+        for j in range(4, dim):
+            Diss[dim*i+j, dim*i+j] -= 0.5*gamma_nr
+    for i in range(4):
+        for j in range(4):
+            Diss[dim*i+i, dim*j+j] -= gamma
+    Diss[dim*5+5, dim*5+5] -= 4*gamma
+    Diss[dim*6+6, dim*6+6] -= 4*gamma
+    for i in range(dim-1):
+        if i!=3:
+            Diss[dim*i+i, dim*(i+1)+i+1] += gamma_nr
+    for i in range(dim-1):
+        Diss[]
+    for i in range(1, dim-1):
+        if 1!=4:
+            Diss[dim*i+i, dim*i+i] -= gamma_nr
+    
+    for i in range(4):
+            b[dim*i+i] = -gamma
+
+    M = Unit[:48,:48] + Diss[:48,:48]
+
+    rho = np.linalg.solve(M,b)
+    
+    print(np.diag(rho), 1-np.sum(np.diag(rho)))
+    
     return 0 
 
 Steady_state(300,0,0.6)
