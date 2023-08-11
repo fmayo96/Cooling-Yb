@@ -1,10 +1,11 @@
 #Solve the equations to find the steady state 
-
+import time
 import numpy as np 
 from parameters import *
 from aux_func import *
+from numba import njit
 
-
+@njit
 def Steady_state(T, j_0_3, j_0_4):
     """
     This function calculates the steady state of the system:
@@ -13,122 +14,74 @@ def Steady_state(T, j_0_3, j_0_4):
                 -j_0_4: pump intensity of the laser that drives the 4-5 transition, in MW/cm^2.
         output: steady state of the system. Format =  array.
     """
-    beta = 1/(kB*T)
-    Omega_3 = Rabifreq(j_0_3*1e6)
+    beta = 1/(kB*300)
     Omega_4 = Rabifreq(j_0_4*1e6)
-    
-    #Transition rates:
-    dim = 7
-    b = np.zeros(dim**2-1, dtype = complex)
-    M = np.zeros([dim**2-1, dim**2-1], dtype = complex)
-    Unit = np.zeros([dim**2-1, dim**2-1], dtype= complex) #Uninatry part of the master equation
-    Diss = np.zeros([dim**2-1, dim**2-1], dtype= complex) #Dissipative part of the master equation
-    ks = [k_12, k_23, k_34, Omega_4/N(beta,w)**0.5, k_56, k_67]
+    ks = [k_12, k_23, k_34, Omega_4, k_56, k_67]
     ws = [w1, w2, w3, w, w4, w5]
-    
-    for i in range(dim):
-        for j in range(dim):
-            if i>0 and j>0 and i<6 and j<6:
-                Unit[dim*i+j, dim*i+j-1] = 1j*ks[j-1]*N(beta, ws[j-1])**0.5  
-                Unit[dim*i+j, dim*i+j+1] = 1j*ks[j]*N(beta,ws[j])**0.5
-                Unit[dim*i+j, dim*(i-1)+j] = -1j*ks[i-1]*N(beta, ws[i-1])**0.5
-                Unit[dim*i+j, dim*(i+1)+j] = -1j*ks[i]*N(beta, ws[i])**0.5
-            elif i>0 and j==0 and i < 6:
-                Unit[dim*i+j, dim*i+j+1] = 1j*ks[j]*N(beta,ws[j])**0.5
-                Unit[dim*i+j, dim*(i-1)+j] = -1j*ks[i-1]*N(beta, ws[i-1])**0.5
-                Unit[dim*i+j, dim*(i+1)+j] = -1j*ks[i]*N(beta, ws[i])**0.5
-            elif i==0 and j>0 and j < 6:
-                Unit[dim*i+j, dim*i+j-1] = 1j*ks[j-1]*N(beta, ws[j-1])**0.5  
-                Unit[dim*i+j, dim*i+j+1] = 1j*ks[j]*N(beta,ws[j])**0.5
-                Unit[dim*i+j, dim*(i+1)+j] = -1j*ks[i]*N(beta, ws[i])**0.5
-            elif i==0 and j==0:
-                Unit[dim*i+j, dim*i+j+1] = 1j*ks[j]*N(beta,ws[j])**0.5
-                Unit[dim*i+j, dim*(i+1)+j] = -1j*ks[i]*N(beta, ws[i])**0.5
-            elif i == 6 and j > 0 and j < 5:
-                Unit[dim*i+j, dim*i+j-1] = 1j*ks[j-1]*N(beta, ws[j-1])**0.5  
-                Unit[dim*i+j, dim*i+j+1] = 1j*ks[j]*N(beta,ws[j])**0.5
-                Unit[dim*i+j, dim*(i-1)+j] = -1j*ks[i-1]*N(beta, ws[i-1])**0.5
-            elif i > 0 and i < 5 and j==6:
-                Unit[dim*i+j, dim*i+j-1] = 1j*ks[j-1]*N(beta, ws[j-1])**0.5  
-                Unit[dim*i+j, dim*(i-1)+j] = -1j*ks[i-1]*N(beta, ws[i-1])**0.5
-                Unit[dim*i+j, dim*(i+1)+j] = -1j*ks[i]*N(beta, ws[i])**0.5
-<<<<<<< HEAD
-    Unit[dim*5+6, dim*5+5], Unit[dim*5+6, dim*4+6] = 1j*ks[5]*N(beta, ws[5])**0.5, -1j*ks[4]*N(beta, ws[4])**0.5
-    Unit[dim*6+5, dim*6+4], Unit[dim*5+6, dim*5+5] = 1j*ks[4]*N(beta, ws[4])**0.5, -1j*ks[5]*N(beta, ws[5])**0.5
+    ###=========Hamiltonian=============
+    H_ev = np.zeros((7,7), dtype = np.complex128)
     for i in range(6):
-        Unit[dim*5+6, dim*i+i] = +1j*ks[5]*N(beta, ws[5])**0.5
-        Unit[dim*6+5, dim*i+i] = -1j*ks[5]*N(beta, ws[5])**0.5
-    b[dim*5+6] += 1j*ks[5]*N(beta, ws[5])**0.5
-    b[dim*6+5] -= 1j*ks[5]*N(beta, ws[5])**0.5
-    Unit[dim*0+6, dim*0+5] = 1j*ks[5]*N(beta, ws[5])**0.5
-    Unit[dim*0+6, dim*1+6] = -1j*ks[1]*N(beta, ws[1])**0.5
-    Unit[dim*6+0, dim*6+1] = 1j*ks[1]*N(beta, ws[1])**0.5
-    Unit[dim*6+0, dim*5+0] = -1j*ks[5]*N(beta, ws[5])**0.5
-=======
-        Unit[dim*5+6, dim*5+5], Unit[dim*5+6, dim*4+6] = 1j*ks[5]*N(beta, ws[5])**0.5, -1j*ks[4]*N(beta, ws[4])**0.5
-        Unit[dim*6+5, dim*6+4], Unit[dim*5+6, dim*5+5] = 1j*ks[4]*N(beta, ws[4])**0.5, -1j*ks[5]*N(beta, ws[5])**0.5
+        H_ev[i, i+1] = ks[i]*N(beta, ws[i])**0.5
+    for i in range(1,7):
+        H_ev[i, i-1] = ks[i-1]*N(beta, ws[i-1])**0.5
+    H_ev[3,4] = Omega_4
+    H_ev[4,3] = Omega_4
+    ###=======Decoherence Matrix========
+    def decoh(rho):
+        Decoh = np.zeros((7,7), dtype = np.complex128)
+        for i in range(4):
+            for j in range(4,7):
+                Decoh[i,j] = -0.5 * gamma_nr
+                Decoh[j,i] = -0.5 * gamma_nr
         for i in range(6):
-            Unit[dim*5+6, dim*i+i] = 1j*ks[5]*N(beta, ws[5])**0.5
-            Unit[dim*5+6, dim*i+i] = 1j*ks[5]*N(beta, ws[5])**0.5
-    
->>>>>>> abb4ce04aa2527b5933285903ea5a09e4494d735
-    for i in range(dim-1):
-        if i != 3:
-            Diss[dim*i+i+1, dim*i+i+1] -= 0.5*gamma_nr
-    for i in range(4):
-        for j in range(4, dim):
-            Diss[dim*i+j, dim*i+j] -= 0.5*gamma_nr
-    for i in range(4):
-        for j in range(4):
-            Diss[dim*i+i, dim*j+j] -= gamma
-<<<<<<< HEAD
-    Diss[dim*4+4, dim*4+4] -= 4*gamma
-    Diss[dim*5+5, dim*5+5] -= 4*gamma
-    for i in range(dim-2):
-        if i!=3:
-            Diss[dim*i+i, dim*(i+1)+i+1] += gamma_nr
-    for i in range(dim-1):
-        Diss[dim*5+5, dim*i+i] -= gamma_nr
-    b[dim*5+5] -= gamma_nr
-=======
-    Diss[dim*5+5, dim*5+5] -= 4*gamma
-    Diss[dim*6+6, dim*6+6] -= 4*gamma
-    for i in range(dim-1):
-        if i!=3:
-            Diss[dim*i+i, dim*(i+1)+i+1] += gamma_nr
-    for i in range(dim-1):
-        Diss[]
->>>>>>> abb4ce04aa2527b5933285903ea5a09e4494d735
-    for i in range(1, dim-1):
-        if 1!=4:
-            Diss[dim*i+i, dim*i+i] -= gamma_nr
-    
-    for i in range(4):
-<<<<<<< HEAD
-            b[dim*i+i] -= gamma
-      
+            Decoh[i, i+1] = -0.5*gamma_nr
+            Decoh[i+1, i] = -0.5*gamma_nr
+        out = Decoh*rho
+        return out
+    ###======Non radiative==============
+    def nonRad(rho):
+        diag = np.diag(rho)
+        excitations = np.zeros(7, dtype = np.complex128)
+        decay = np.zeros(7, dtype = np.complex128)
+        for i in range(6):
+            if i !=3:
+                excitations[i] = gamma_nr*diag[i+1]
+        for i in range(1,7):
+            if i != 4:
+                decay[i] = -gamma_nr*diag[i]
+        out = np.diag(excitations) + np.diag(decay)
+        return out
+    #===========Spontaneous emission=======
+    def spontEm(rho):
+        diag = np.diag(rho)
+        _spontEm = np.zeros((7,7), dtype = np.complex128)
+        for i in range(4):
+            _spontEm[i,i] = gamma * np.sum(diag[4:])
+        for i in range(4, 7):
+            _spontEm[i,i] = -4*gamma*diag[i]
+        return _spontEm
 
-    M = Unit + Diss
-    
-    rho = np.linalg.solve(M,b)
-    diag_rho = [rho[i] for i in range(0,dim**2-1,8)]
-    diag_rho.append(1-np.sum(diag_rho)) 
-    print(f"rho: {diag_rho}")   
-    
+    def Lliouv(rho):
+        lliouv = -1j*H_ev@rho + 1j*rho@H_ev + decoh(rho) + nonRad(rho) + spontEm(rho)
+        return lliouv
+    tf = 1/314.15/10
+    dt = 5e-13
+    Nsteps = int(tf/dt)
+    rho_i = Thermal_state(beta, H)
+    print(rho_i)
+    rho_i = np.diag(rho_i)
+    rho = np.zeros((7,7), dtype = np.complex128)
+    rho = rho_i
+    for n in range(Nsteps-1):
+        rho = rho + dt*Lliouv(rho)
+        #if n % 1000000 == 0:
+        #   print(f"n={n} | rho:{np.diag(np.real(rho))}")
+    return np.diag(np.real(rho))
 
-    return diag_rho
-=======
-            b[dim*i+i] = -gamma
 
-    M = Unit[:48,:48] + Diss[:48,:48]
-
-    rho = np.linalg.solve(M,b)
-    
-    print(np.diag(rho), 1-np.sum(np.diag(rho)))
-    
-    return 0 
->>>>>>> abb4ce04aa2527b5933285903ea5a09e4494d735
-
-Steady_state(300,0,0.6)
-
+start = time.time()
+rho_ss = Steady_state(300,0,0.6)
+print(rho_ss)
+end = time.time()
+print(f"Total time = {end - start}")
 

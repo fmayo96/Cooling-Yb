@@ -2,9 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt 
 from power import Net_Power 
 
-Temps = [400,330,250,170]
+Temps = [300,150,100,70]
 
-j_0_4 = np.linspace(0,1.8,200)
+j_0_4 = np.linspace(0,1.8,20)
 
 P_net = np.zeros([len(Temps), len(j_0_4)])
 
@@ -21,5 +21,5 @@ plt.plot(j_0_4, -P_net[3,:], linewidth = 2, label = 'T=' + str(Temps[3]))
 plt.legend()
 plt.xlabel('Pump intensity ' + r'$MW/cm^2$', fontsize = 14)
 plt.ylabel('Net Cooling Power ' + r'$MW/cm^3$', fontsize = 14)
-plt.ylim([0,400])
+#plt.ylim([0,400])
 plt.show()  

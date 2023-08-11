@@ -47,7 +47,7 @@ E6 = E5 + w5
 E_gs = np.array([E0,E1,E2,E3])
 E_es = np.array([E4,E5,E6])
 
-H = np.zeros(7)
+H = np.zeros(7, dtype=np.complex128)
 H[0] = E0
 H[1] = E1
 H[2] = E2

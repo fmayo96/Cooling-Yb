@@ -8,8 +8,12 @@ from steady_state import *
 
 def Net_Power(T, j_0_3, j_0_4):
     beta = 1/(kB*T)
-    steady_state = Steady_state(T,j_0_3,j_0_4)
-    print(steady_state)
+    #steady_state = Steady_state(T,j_0_3,j_0_4)
+    steady_state_0 = np.array([0.57955245, 0.18618485, 0.095937,   0.05952767, 0.04397912, 0.02347037,
+ 0.01134855])
+    steady_state = np.array([0.56632714, 0.18193613, 0.09374773, 0.05816925, 0.05571185, 0.02973179,
+ 0.01437612])
+    print(steady_state.sum())
     initial_state = Thermal_state(beta,H)
     
     rho_0 = np.sum(steady_state[4:])
@@ -67,7 +71,7 @@ def Net_Power(T, j_0_3, j_0_4):
     
     return P_net
 
-Pow_300_06 = Net_Power(300, 0, 0.69)
+Pow_300_06 = Net_Power(300, 0, 0.6)
 
 
 
