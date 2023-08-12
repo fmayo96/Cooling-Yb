@@ -64,7 +64,7 @@ def Steady_state(T, j_0_3, j_0_4):
     def Lliouv(rho):
         lliouv = -1j*H_ev@rho + 1j*rho@H_ev + decoh(rho) + nonRad(rho) + spontEm(rho)
         return lliouv
-    tf = 1/314.15/10
+    tf = 1/314.15
     dt = 5e-13
     Nsteps = int(tf/dt)
     rho_i = Thermal_state(beta, H)
@@ -76,12 +76,15 @@ def Steady_state(T, j_0_3, j_0_4):
         rho = rho + dt*Lliouv(rho)
         #if n % 1000000 == 0:
         #   print(f"n={n} | rho:{np.diag(np.real(rho))}")
-    return np.diag(np.real(rho))
+    rho_ss = np.diag(np.real(rho))
+    return rho_ss
 
 
 start = time.time()
-rho_ss = Steady_state(300,0,0.6)
+rho_ss = Steady_state(300,0,1.5)
 print(rho_ss)
 end = time.time()
 print(f"Total time = {end - start}")
+np.savetxt("ss_j0=15.txt", rho_ss)
+
 
