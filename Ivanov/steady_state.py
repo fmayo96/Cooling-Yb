@@ -14,7 +14,7 @@ def Steady_state(T, j_0_3, j_0_4):
                 -j_0_4: pump intensity of the laser that drives the 4-5 transition, in MW/cm^2.
         output: steady state of the system. Format =  array.
     """
-    beta = 1/(kB*300)
+    beta = 1/(kB*T)
     Omega_4 = Rabifreq(j_0_4*1e6)
     ks = [k_12, k_23, k_34, Omega_4, k_56, k_67]
     ws = [w1, w2, w3, w, w4, w5]
@@ -81,10 +81,10 @@ def Steady_state(T, j_0_3, j_0_4):
 
 
 start = time.time()
-rho_ss = Steady_state(150,0,0)
+rho_ss = Steady_state(150,0,1.5)
 print(rho_ss)
 end = time.time()
 print(f"Total time = {end - start}")
-np.savetxt("ss_j0=00_150.txt", rho_ss)
+np.savetxt("ss_j0=15_150.txt", rho_ss)
 
 
