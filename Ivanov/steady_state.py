@@ -16,6 +16,7 @@ def Steady_state(T, j_0_3, j_0_4):
     """
     beta = 1/(kB*T)
     Omega_4 = Rabifreq(j_0_4*1e6)
+    Omega_3 = Rabifreq(j_0_3*1e6)
     ks = [k_12, k_23, k_34, Omega_4, k_56, k_67]
     ws = [w1, w2, w3, w, w4, w5]
     ###=========Hamiltonian=============
@@ -26,6 +27,8 @@ def Steady_state(T, j_0_3, j_0_4):
         H_ev[i, i-1] = ks[i-1]*N(beta, ws[i-1])**0.5
     H_ev[3,4] = Omega_4
     H_ev[4,3] = Omega_4
+    H_ev[2,4] = Omega_3
+    H_ev[4,2] = Omega_3
     ###=======Decoherence Matrix========
     def decoh(rho):
         Decoh = np.zeros((7,7), dtype = np.complex128)
@@ -81,7 +84,7 @@ def Steady_state(T, j_0_3, j_0_4):
 
 
 start = time.time()
-rho_ss = Steady_state(70,0,1.5)
+rho_ss = Steady_state(70,1.5,0)
 print(rho_ss)
 end = time.time()
 print(f"Total time = {end - start}")
