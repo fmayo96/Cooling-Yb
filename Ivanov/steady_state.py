@@ -84,10 +84,10 @@ def Steady_state(T, j_0_3, j_0_4):
 
 
 start = time.time()
-rho_ss = Steady_state(70,0,0.15)
+rho_ss = Steady_state(70,0.01,0.0)
 print(rho_ss)
 end = time.time()
 print(f"Total time = {end - start}")
-np.savetxt("ss_j0=015_70.txt", rho_ss)
+np.savetxt("ss_j0=001_70.txt", rho_ss)
 
 
