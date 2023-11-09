@@ -13,5 +13,8 @@ def N(beta,omega):
     return 1/(np.exp(beta*omega)-1)
 @njit
 def Thermal_state(beta, H):
-    return np.exp(-beta*H)/np.sum(np.exp(-beta*H))
+    state = np.exp(-beta*H)
+    state[-3:] = [0,0,0]
+    return state / np.sum(state)
+
 

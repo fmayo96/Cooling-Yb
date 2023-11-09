@@ -71,7 +71,6 @@ def Steady_state(T, j_0_3, j_0_4):
     dt = 5e-13
     Nsteps = int(tf/dt)
     rho_i = Thermal_state(beta, H)
-    print(rho_i)
     rho_i = np.diag(rho_i)
     rho = np.zeros((7,7), dtype = np.complex128)
     rho = rho_i
@@ -79,15 +78,16 @@ def Steady_state(T, j_0_3, j_0_4):
         rho = rho + dt*Lliouv(rho)
         #if n % 1000000 == 0:
         #   print(f"n={n} | rho:{np.diag(np.real(rho))}")
-    rho_ss = np.diag(np.real(rho))
-    return rho_ss
+    #rho_ss = np.diag(np.real(rho))
+    rho_ss = rho
+    return rho_ss, rho_i
 
 
 start = time.time()
-rho_ss = Steady_state(70,0.01,0.0)
+rho_ss, rho_i = Steady_state(70,0.01,0.0)
 print(rho_ss)
 end = time.time()
 print(f"Total time = {end - start}")
 np.savetxt("ss_j0=001_70.txt", rho_ss)
-
+np.savetxt("initial_state_j0=001_70.txt", rho_i)
 
