@@ -81,11 +81,11 @@ def Steady_state(T, j_0_3, j_0_4):
     rho_ss = np.diag(np.real(rho))
     return rho_ss
 
-"""
+
 start = time.time()
-rho_ss = Steady_state(300,0.0,1.5)
+rho_ss = Steady_state(300,1.5,0.0)
 print(rho_ss)
 end = time.time()
 print(f"Total time = {end - start}")
 np.savetxt("ss_j0=15_300.txt", rho_ss)
-"""
+
