@@ -89,5 +89,9 @@ print(rho_ss)
 end = time.time()
 print(f"Total time = {end - start}")
 np.savetxt("ss_j=04_300.txt", rho_ss)
+<<<<<<< HEAD
 
 """
+=======
+"""
+>>>>>>> 981dffa998d41ab85bf29cdfba92509e85a2df8d
