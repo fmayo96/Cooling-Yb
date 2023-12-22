@@ -29,6 +29,7 @@ def Steady_state(T, j_0_3, j_0_4):
     H_ev[4,3] = Omega_4
     #H_ev[2,4] = Omega_3
     #H_ev[4,2] = Omega_3
+   
     ###=======Decoherence Matrix========
     def decoh(rho):
         Decoh = np.zeros((7,7), dtype = np.complex128)
@@ -36,9 +37,9 @@ def Steady_state(T, j_0_3, j_0_4):
             for j in range(4,7):
                 Decoh[i,j] = -0.5 * gamma_nr
                 Decoh[j,i] = -0.5 * gamma_nr
-        # for i in range(6):
-        #     Decoh[i, i+1] = -0.5*gamma_nr
-        #     Decoh[i+1, i] = -0.5*gamma_nr
+        for i in range(6):
+            Decoh[i, i+1] = -0.5*gamma_nr
+            Decoh[i+1, i] = -0.5*gamma_nr
         out = Decoh*rho
         return out
     ###======Non radiative==============
@@ -81,7 +82,7 @@ def Steady_state(T, j_0_3, j_0_4):
     rho_ss = np.diag(np.real(rho))
     return rho_ss
 
-
+"""
 start = time.time()
 rho_ss = Steady_state(300,0.0,0.4)
 print(rho_ss)
@@ -89,3 +90,4 @@ end = time.time()
 print(f"Total time = {end - start}")
 np.savetxt("ss_j=04_300.txt", rho_ss)
 
+"""
