@@ -76,22 +76,16 @@ def Steady_state(T, j_0_3, j_0_4):
     rho = np.zeros((7,7), dtype = np.complex128)
     rho = rho_i
     for n in range(Nsteps-1):
-        rho = rho + dt*Lliouv(rho)
+        rho = rho + dt*Lliouv(rho + 0.5*dt * Lliouv(rho))
         #if n % 1000000 == 0:
         #   print(f"n={n} | rho:{np.diag(np.real(rho))}")
     rho_ss = np.diag(np.real(rho))
     return rho_ss
 
-"""
+
 start = time.time()
-rho_ss = Steady_state(300,0.0,0.4)
+rho_ss = Steady_state(150,0.0,0.2)
 print(rho_ss)
 end = time.time()
 print(f"Total time = {end - start}")
-np.savetxt("ss_j=04_300.txt", rho_ss)
-<<<<<<< HEAD
-
-"""
-=======
-"""
->>>>>>> 981dffa998d41ab85bf29cdfba92509e85a2df8d
+np.savetxt("ss_j=04_02_300.txt", rho_ss)

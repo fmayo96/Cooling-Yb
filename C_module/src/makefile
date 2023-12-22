@@ -7,7 +7,7 @@ LD = $(CC)
 
 SOURCE_C = $(wildcard *.c)
 OBJECTS_C = $(patsubst %.c, %.o, $(SOURCE_C))
-EXECUTABLE = ../bin/main.e
+EXECUTABLE = ../bin/main
 
 default: all
 objects: $(OBJECTS_C)

@@ -12,9 +12,9 @@ void Thermal_state(double complex *thermal_state, double temp){
     *(thermal_state + dim*1 + 1) = exp(-beta*E1);
     *(thermal_state + dim*2 + 2) = exp(-beta*E2);
     *(thermal_state + dim*3 + 3) = exp(-beta*E3);
-    *(thermal_state + dim*4 + 4) = exp(-beta*E4);
-    *(thermal_state + dim*5 + 5) = exp(-beta*E5);
-    *(thermal_state + dim*6 + 6) = exp(-beta*E6);
+    *(thermal_state + dim*4 + 4) = 0;
+    *(thermal_state + dim*5 + 5) = 0;
+    *(thermal_state + dim*6 + 6) = 0;
     for(i=0; i<dim; i++){
         Z += *(thermal_state + dim*i + i);
     }

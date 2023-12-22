@@ -6,7 +6,6 @@
 #include <time.h>
 #include "aux.h"
 #include "time_evol.h"
-#include "power.h"
 
 //=================Parameters===============//
 //Fundamental constants
@@ -51,7 +50,7 @@ double E6;
 
 int main(){
     int i,j;
-    double temp = 300, tf = 0.00317, dt = 9e-13, j_0_3 = 0, j_0_4 = 0.6, trace, rho_0;
+    double temp = 300, tf = 1e-8, dt = 9e-13, j_0_3 = 0, j_0_4 = 0.6, trace, rho_0;
     double complex *state;
     state = (double complex*) calloc(dim*dim, sizeof(double complex));
     hbar = h/(2*pi);
@@ -70,12 +69,13 @@ int main(){
     E6 = E5+w6;
     clock_t begin = clock();
     
+    
     Thermal_state(state, 300);
     Time_evol(state, tf, dt, temp, j_0_3, j_0_4);
     trace = Trace(state);
     rho_0 = Rho_0(state);
 char filename[255];
-    sprintf(filename,"outs/net_pow_tf=%e.txt", tf);
+    sprintf(filename,"outs/results_tf=%e.txt", tf);
 
     FILE *fp=fopen(filename,"w");
 
