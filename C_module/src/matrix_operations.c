@@ -35,4 +35,6 @@ void Commutator(double complex *C, double complex *A, double complex *B, int dim
     for(i = 0; i < dim*dim; i++) {
         C[i] = AB[i] - BA[i];
     }
+    free(AB);
+    free(BA);
 }

@@ -53,7 +53,7 @@ void RK4_step(double complex *state, double dt, double temp, double j_0_3, doubl
     }
     for(i = 0; i < dim; i++){
         for(j = 0; j < dim; j++){
-            state[dim*i + j] += (double)1/6 * (K1[dim*i + j] + 2 * K2[dim*i + j] + 2 * K3[dim*i + j] * K4[dim*i + j]); 
+            state[dim*i + j] += (double)1/6 * (K1[dim*i + j] + 2 * K2[dim*i + j] + 2 * K3[dim*i + j] + K4[dim*i + j]); 
         }
     }
     free(aux_state);
