@@ -50,7 +50,7 @@ double E6;
 
 int main(){
     int i,j;
-    double temp = 300, tf = 1e-8, dt = 9e-13, j_0_3 = 0, j_0_4 = 0.6, trace, rho_0;
+    double temp = 300, tf = 1e-6, dt = 5e-13, j_0_3 = 0, j_0_4 = 0, trace, rho_0;
     double complex *state;
     state = (double complex*) calloc(dim*dim, sizeof(double complex));
     hbar = h/(2*pi);

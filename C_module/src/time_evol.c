@@ -109,8 +109,8 @@ void Unit_evo(double complex *unit_state, double complex *state, double temp, do
     }
     H_evo[dim*3 + 4] = Rabi4;
     H_evo[dim*4 + 3] = Rabi4;
-    H_evo[dim*3 + 2] = Rabi3;
-    H_evo[dim*2 + 3] = Rabi3;
+    H_evo[dim*4 + 2] = Rabi3;
+    H_evo[dim*2 + 2] = Rabi3;
 
     Commutator(unit_state, H_evo, state, dim);
     for(i = 0; i < dim*dim; i++) {
@@ -143,7 +143,7 @@ void NonRad(double complex *non_rad_state, double complex *state) {
         non_rad_state[dim*i + i] = gamma_nr * (state[dim*(i+1) + i+1] - state[dim*i + i]);
     }
     non_rad_state[dim*3 + 3] = -gamma_nr * state[dim*3 + 3];
-    non_rad_state[dim*4 + 4] = gamma_nr * state[dim*4 + 4];
+    non_rad_state[dim*4 + 4] = gamma_nr * state[dim*5 + 5];
     for(i = 4; i < 6; i++) {
         non_rad_state[dim*i + i] = gamma_nr * (state[dim*(i+1) + i+1] - state[dim*i + i]);
     }
