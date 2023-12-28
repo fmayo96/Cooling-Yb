@@ -133,7 +133,7 @@ void Decoh(double complex *decoh_state, double complex *state) {
     for(i = 0; i < dim-1; i++) {
         decoh_state[dim*i + i+1] = -0.5 * gamma_nr * state[dim*i + i+1];
         decoh_state[dim*(i+1) + i] = -0.5 * gamma_nr * state[dim*(i+1) + i];
-    }
+    } 
 }
 
 void NonRad(double complex *non_rad_state, double complex *state) {
