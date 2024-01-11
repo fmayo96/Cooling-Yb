@@ -49,7 +49,7 @@ double E6;
 
 int main(){
     int i;
-    double temp = 300, tf = 1e-6, dt = 1e-13, j_0_3 = 0, j_0_4 = 0.0;
+    double temp = 300, tf = 0.003179650238, dt = 5e-13, j_0_3 = 0, j_0_4 = 0.6, trace, rho_0;
     double complex *state;
     state = (double complex*) calloc(dim*dim, sizeof(double complex));
     hbar = h/(2*pi);
@@ -73,17 +73,18 @@ int main(){
     FILE *fp=fopen(filename,"w");
     
     
-    Thermal_state(state, 300);
+    Thermal_state(state, temp);
     Time_evol(state, tf, dt, temp, j_0_3, j_0_4);
     
-    fprintf(fp, "[");
     for(i = 0; i < dim-1; i++){
             fprintf(fp, " %e,", creal(state[dim*i+i]));
         }
-        fprintf(fp, "%e]\n", creal(state[dim*6+6]));
+        fprintf(fp, "%e\n", creal(state[dim*6+6]));
     
-
-
+    trace = Trace(state);
+    rho_0 = Rho_0(state);
+    printf("Trace = %.4lf \n", trace);
+    printf("Rho_0 = %.4lf \n", rho_0);
     fclose(fp);
     free(state);
     return 0;

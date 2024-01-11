@@ -9,11 +9,41 @@
 void Time_evol(double complex *state, double tf, double dt, double temp, double j_0_3, double j_0_4){
     int N = (int) (tf/dt), i;
     for(i = 0; i < N; i++){
-        RK4_step(state, dt, temp, j_0_3, j_0_4);
+        RK2_step(state, dt, temp, j_0_3, j_0_4);
     }
 }
 
-void RK4_step(double complex *state, double dt, double temp, double j_0_3, double j_0_4){
+void RK2_step(double complex *state, double dt, double temp, double j_0_3, double j_0_4) {
+    int i,j;
+    double complex *aux_state, *diff_state, *K1, *K2;
+    aux_state = (double complex*) calloc(dim*dim, sizeof(double complex));
+    diff_state = (double complex*) calloc(dim*dim, sizeof(double complex));
+    K1 = (double complex*) calloc(dim*dim, sizeof(double complex));
+    K2 = (double complex*) calloc(dim*dim, sizeof(double complex));
+
+    Diff(diff_state, state, temp, j_0_3, j_0_4);    
+    for(i = 0; i < dim; i++){
+        for(j = 0; j < dim; j++){
+            K1[dim*i + j] = diff_state[dim*i + j] * dt;
+            aux_state[dim*i + j] = state[dim*i + j] + 0.5* K1[dim*i + j];
+        }
+    }
+    Diff(diff_state, aux_state, temp, j_0_3, j_0_4);    
+    for(i = 0; i < dim; i++){
+        for(j = 0; j < dim; j++){
+            K2[dim*i + j] = diff_state[dim*i + j] * dt;
+        }
+    }
+    for(i = 0; i < dim*dim; i++) {
+        state[i] = state[i] + 0.5 * (K1[i] + K2[i]);
+    }
+    free(K1);
+    free(K2);
+    free(aux_state);
+    free(diff_state);
+}
+/*
+void RK4_step(double complex *state, double dt, double temp, double j_0_3, double j_0_4) {
     int i, j;
     
     double complex *aux_state, *diff_state, *K1, *K2, *K3, *K4;
@@ -62,7 +92,7 @@ void RK4_step(double complex *state, double dt, double temp, double j_0_3, doubl
     free(K2);
     free(K3);
     free(K4);
-}
+} */
 
 void Diff(double complex *diff_state, double complex *state, double temp, double j_0_3, double j_0_4){
     int i;
@@ -94,8 +124,8 @@ void Unit_evo(double complex *unit_state, double complex *state, double temp, do
     H_evo = (double complex*) calloc(dim*dim, sizeof(double complex));
     double Rabi4, Rabi3;
     double *ks, *ws;
-    ks = (double *) calloc(6, sizeof(double));
-    ws = (double *) calloc(6, sizeof(double));
+    ks = (double*) calloc(6, sizeof(double));
+    ws = (double*) calloc(6, sizeof(double));
     Rabi4 = Rabifreq(j_0_4);
     Rabi3 = Rabifreq(j_0_3);
     ks[0] = k12; ks[1] = k23; ks[2] = k34; ks[3] = Rabi4; ks[4] = k56; ks[5] = k67;  
@@ -114,7 +144,7 @@ void Unit_evo(double complex *unit_state, double complex *state, double temp, do
 
     Commutator(unit_state, H_evo, state, dim);
     for(i = 0; i < dim*dim; i++) {
-        unit_state[i] = -I * unit_state[i];
+        unit_state[i] *= -I;
     }
 
     free(H_evo);
@@ -144,9 +174,7 @@ void NonRad(double complex *non_rad_state, double complex *state) {
     }
     non_rad_state[dim*3 + 3] = -gamma_nr * state[dim*3 + 3];
     non_rad_state[dim*4 + 4] = gamma_nr * state[dim*5 + 5];
-    for(i = 4; i < 6; i++) {
-        non_rad_state[dim*i + i] = gamma_nr * (state[dim*(i+1) + i+1] - state[dim*i + i]);
-    }
+    non_rad_state[dim*5 + 5] = gamma_nr * (state[dim*6 + 6] - state[dim*5 + 5]);
     non_rad_state[dim*6 + 6] = -gamma_nr * state[dim*6 + 6];
 }
 
