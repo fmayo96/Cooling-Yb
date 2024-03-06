@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <complex.h>
+#include <time.h>
 #include "aux.h"
 #include "time_evol.h"
 
@@ -49,9 +50,11 @@ double E6;
 
 int main(){
     int i;
-    double temp = 300, tf = 0.003179650238, dt = 5e-13, j_0_3 = 0, j_0_4 = 0.6, trace, rho_0;
-    double complex *state;
+    double temp = 300, tf =  1e-8/*0.003179650238*/, dt = 5e-13, j_0_3 = 0, j_0_4 = 0.6, trace, rho_0;
+    double complex *state, *H_evo;
     state = (double complex*) calloc(dim*dim, sizeof(double complex));
+    H_evo = (double complex*) calloc(dim*dim, sizeof(double complex));
+
     hbar = h/(2*pi);
     w1 = 237*h*c;
     w2 = 138*h*c;
@@ -67,6 +70,9 @@ int main(){
     E5 = E4+w5;
     E6 = E5+w6;
 
+    double start, end;
+	start = clock();
+
     char filename[255];
     sprintf(filename,"outs/results_temp=%.1lf_j0=%.2lf.txt", temp, j_0_4);
 
@@ -74,18 +80,29 @@ int main(){
     
     
     Thermal_state(state, temp);
-    Time_evol(state, tf, dt, temp, j_0_3, j_0_4);
+    Effective_hamiltonian(H_evo, temp, j_0_3, j_0_4);
+    for(int l = 0; l < dim; l++){
+        for(int m = 0; m < dim; m++) {
+            printf("%e ");
+        }
+        printf("\n");
+    }
+    Time_evol(state, tf, dt, H_evo);
     
+ 
     for(i = 0; i < dim-1; i++){
             fprintf(fp, " %e,", creal(state[dim*i+i]));
         }
-        fprintf(fp, "%e\n", creal(state[dim*6+6]));
-    
+        fprintf(fp, "%e \n", creal(state[dim*6+6]));
+ 
+    end = clock();
+    printf("Program duration: %.2lf \n", (double) (end - start) / CLOCKS_PER_SEC);   
     trace = Trace(state);
     rho_0 = Rho_0(state);
     printf("Trace = %.4lf \n", trace);
     printf("Rho_0 = %.4lf \n", rho_0);
     fclose(fp);
     free(state);
+    free(H_evo);
     return 0;
 }
