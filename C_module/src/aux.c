@@ -67,7 +67,7 @@ void Effective_hamiltonian(double complex *H_evo, double temp, double j_0_3, dou
     ws[0] = w1; ws[1] = w2; ws[2] = w3; ws[3] = w; ws[4] = w5; ws[5] = w6; 
     
     for(i = 0; i < dim - 1; i++) {
-        H_evo[dim*i + i+1] = ks[i] * sqrt(Thermal_num(temp, ws[i]));
+        H_evo[dim*i + i+1] = ks[i] * sqrt(Thermal_num(temp, ws[i])+1.0);
     }
     for(i = 1; i < dim; i++) {
         H_evo[dim*i + i - 1] = ks[i-1] * sqrt(Thermal_num(temp, ws[i-1]));
@@ -75,7 +75,7 @@ void Effective_hamiltonian(double complex *H_evo, double temp, double j_0_3, dou
     H_evo[dim*3 + 4] = Rabi4;
     H_evo[dim*4 + 3] = Rabi4;
     H_evo[dim*4 + 2] = Rabi3;
-    H_evo[dim*2 + 2] = Rabi3;
+    H_evo[dim*2 + 4] = Rabi3;
     free(ks);
     free(ws);
 }

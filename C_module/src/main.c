@@ -50,7 +50,7 @@ double E6;
 
 int main(){
     int i;
-    double temp = 300, tf =  0.003179650238, dt = 5e-13, j_0_3 = 0, j_0_4 = 0.1, trace, rho_0;
+    double temp = 100, tf = 1e-5/* 0.003179650238*/, dt = 5e-13, j_0_3 = 0.0, j_0_4 = 0.0, trace, rho_0;
     double complex *state, *H_evo;
     state = (double complex*) calloc(dim*dim, sizeof(double complex));
     H_evo = (double complex*) calloc(dim*dim, sizeof(double complex));
@@ -94,7 +94,7 @@ int main(){
     trace = Trace(state);
     rho_0 = Rho_0(state);
     printf("Trace = %.4lf \n", trace);
-    printf("Rho_0 = %.4lf \n", rho_0);
+    printf("Rho_0 = %e \n", rho_0);
     fclose(fp);
     free(state);
     free(H_evo);

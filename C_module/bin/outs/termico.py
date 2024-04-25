@@ -1,7 +1,7 @@
-#This File contains all the parameters used in the program.
-#Physical constants, transition rates, etc.
-
 import numpy as np 
+import matplotlib.pyplot as plt 
+
+rho = np.array([7.864738e-1, 1.159490e-1, 5.867727e-2, 3.88999e-2])
 
 # Universal constants
 pi = np.pi
@@ -45,17 +45,7 @@ E4 = E3 + w
 E5 = E4 + w4
 E6 = E5 + w5 
 E_gs = np.array([E0,E1,E2,E3])
-E_es = np.array([E4,E5,E6])
 
-H = np.zeros(7, dtype=np.complex128)
-H[0] = E0
-H[1] = E1
-H[2] = E2
-H[3] = E3
-H[4] = E4
-H[5] = E5
-H[6] = E6
-
-print("w1 = ", w1)
-print("k1 = ", k_12 * hbar)
-print(k_12 ** 2 * hbar)
+plt.figure()
+plt.plot(E_gs, np.log(rho), '-')
+plt.show()
