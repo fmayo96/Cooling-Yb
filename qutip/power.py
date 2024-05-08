@@ -10,8 +10,9 @@ def Net_Power(T, j_0_3, j_0_4):
     beta = 1/(kB*T)
     rho_ss = Steady_state(T,j_0_3,j_0_4)
     initial_state = Steady_state(T, 0.0, 0.0)
+    print(initial_state)
     initial_state = np.diag(initial_state)
-    
+   
     steady_state = np.diag(rho_ss)
     
     

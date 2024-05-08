@@ -56,6 +56,7 @@ H[4] = E4
 H[5] = E5
 H[6] = E6
 
-print("w1 = ", w1)
-print("k1 = ", k_12 * hbar)
-print(k_12 ** 2 * hbar)
+
+# print("w1 = ", w1)
+# print("k1 = ", k_12 * hbar)
+# print(k_12 ** 2 * hbar)
