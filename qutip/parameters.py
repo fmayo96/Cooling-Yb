@@ -11,7 +11,7 @@ c = 2.99792458e10   # cm/s
 kB = 1.380649e-23   # J/K
 eps0 = 8.8541878128e-14    # F/cm = C/ (V cm)
 # Dipolar moment
-d = 3.34e-31 # C cm
+d = 3.31e-31 # C cm
 
 #Transition energies in J (we converted the data from cm^-1 to J by multiplying by hc)
 w = 9811*h*c
@@ -23,7 +23,7 @@ w5 = 150*h*c
 #Spontaneous Emission in s^-1
 gamma = 314.5
 #Non resonant transition rates in s^-1
-gamma_nr = 1e12 
+gamma_nr = 1e12
 #Vibronic couplings in s^-1 (k/hbar)
 k_12 = 6.35e11
 k_23 = 2.8e11 

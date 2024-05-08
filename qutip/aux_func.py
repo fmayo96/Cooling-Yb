@@ -8,7 +8,7 @@ def Rabifreq(j_0):
     E_0 = np.sqrt(2*j_0*1e6/(c*n*eps0))
     return d*E_0/hbar
 
-def N(beta,omega):
+def N_therm(beta,omega):
     return 1/(np.exp(beta*omega)-1)
 
 def Thermal_state(beta, H):
