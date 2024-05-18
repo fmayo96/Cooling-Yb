@@ -12,7 +12,7 @@ def Lindbladian(c_op : Qobj, rho : Qobj) -> Qobj:
 
 
 
-def Net_Power(T, j_0_3, j_0_4):
+def Net_Power(T: float, j_0_3: float, j_0_4: float) -> float:
   rho = Steady_state(T, j_0_3, j_0_4)
   
   beta = 1/(T*kB)
@@ -50,42 +50,32 @@ def Net_Power(T, j_0_3, j_0_4):
   Hs = np.diag([E0, E1, E2, E3, E4, E5, E6])
   Hs = Qobj(Hs/hbar)
   Pcool = (Hs * L).tr() * n_ion * N_e * eta_e * hbar - alpha_imp * (j_0_4 + j_0_3) * 1e6
-  Pabs = (j_0_4 + j_0_3) * 1e6 * (alpha_imp + alpha_rad)
-  return Pcool, Pabs
+  return np.real(Pcool)
 
 
 Ts = [300, 250, 200, 150]
 Ns = 1000
 j_0_4 = np.linspace(0, 2, Ns)
-plt.figure(figsize=(15, 5))
+plt.figure()
 COLORS = ['C' + str(i) for i in range(len(Ts))]
 for j,T in enumerate(Ts):
   pow = np.zeros(Ns)
   pow2 = np.zeros(Ns)
-  pabs = np.zeros(Ns)
-  pabs2 = np.zeros(Ns)
+   
   for i in range(Ns):
-    pow[i], pabs[i] = Net_Power(T, 0.0, j_0_4[i])
-    pow2[i], pabs2[i] = Net_Power(T, j_0_4[i], 0.0)
-    
+    pow[i] = Net_Power(T, 0.0, j_0_4[i])
+    pow2[i] = Net_Power(T, j_0_4[i], 0.0)
   pow = np.array(pow)
   pow2 = np.array(pow2)
-  pabs = np.array(pabs)
-  pabs2 = np.array(pabs2)
-  eff = pow / pabs
-  eff2 = pow2 / pabs2  
-  plt.subplot(1,2,1)
+  #plt.subplot(1,2,1)
   plt.plot(j_0_4, pow, color=COLORS[j], linewidth = 2, label = r'$T=$' + str(T))
   plt.plot(j_0_4, pow2, '--', color=COLORS[j],linewidth = 2)
-  plt.ylabel(r"$\mathrm{Net Cooling Power} (W/cm^3)$", fontsize=12)
-  plt.xlabel(r"$\mathrm{Pump intensity} (MW/cm^2)$", fontsize=12)
-  plt.ylim([0, 600])
-  plt.subplot(1,2,2)
-  plt.plot(j_0_4, eff, color=COLORS[j], linewidth = 2, label = r'$T=$' + str(T))
-  plt.plot(j_0_4, eff2, '--', color=COLORS[j],linewidth = 2)
-  plt.ylabel(r"$\eta$", fontsize=12)
-  plt.xlabel(r"$\mathrm{Pump intensity} (MW/cm^2)$", fontsize=12)
+  #plt.subplot(1,2,2)
+  #plt.plot(j_0_4, eta, linewidth = 2, label = r'$T=$' + str(T))
+plt.ylabel(r"$\mathrm{Net Cooling Power} (W/cm^3)$", fontsize=12)
+plt.xlabel(r"$\mathrm{Pump intensity} (MW/cm^2)$", fontsize=12)
 plt.legend()
+plt.ylim([0, 600])
 plt.show()
 
 

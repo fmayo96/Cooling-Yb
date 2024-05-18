@@ -24,7 +24,7 @@ def Hamiltonian(j_0_3, j_0_4):
     H = np.zeros((7,7))
     H[3,4] = Omega_4
     H[4,3] = Omega_4
-    H[2,4] = Omega_3
-    H[4,2] = Omega_3
+    H[1,4] = Omega_3
+    H[4,1] = Omega_3
     return H
 
