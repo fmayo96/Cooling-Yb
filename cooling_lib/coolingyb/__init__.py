@@ -1,2 +1,2 @@
 from .parameters import Parameters
-from .coolingyb import CoolingYb
+from .coolingyb import Power

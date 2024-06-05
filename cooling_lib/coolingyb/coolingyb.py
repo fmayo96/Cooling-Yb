@@ -9,7 +9,7 @@ def Lindbladian(c_op : Qobj, rho : Qobj) -> Qobj:
   L = c_op * rho * c_op.dag() - 0.5 * (c_op.dag() * c_op * rho + rho * c_op.dag() * c_op )
   return L
 
-class CoolingYb:
+class Power:
   def Net_Power(T, j_0_3, j_0_4):
     rho = Steady_state(T, j_0_3, j_0_4)
     
