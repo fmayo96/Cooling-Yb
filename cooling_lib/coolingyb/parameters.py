@@ -12,7 +12,7 @@ class Parameters:
   eps0 = 8.8541878128e-14    # F/cm = C/ (V cm)
   # Dipolar moment
   d = 3.31e-31 # C cm
-  d2 = d * 0.8
+  d2 = d
   #Transition energies in J (we converted the data from cm^-1 to J by multiplying by hc)
   w = 9811*h*c
   w1 = 237*h*c

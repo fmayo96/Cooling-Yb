@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 from coolingyb import Power, Parameters
 
 Nstep = 1000
-Ts = [150, 140, 138, 130]
-js = np.linspace(0, 0.2, Nstep)
+Ts = [300, 250, 200, 150]
+js = np.linspace(0, 2, Nstep)
 COLORS = ['C0', 'C1', 'C2', 'C3']
-
+#Parameters.d2 = 0.9 * Parameters.d
 plt.figure()
 for n,T in enumerate(Ts):
   pow = np.zeros(Nstep)  
@@ -20,5 +20,5 @@ plt.legend(fontsize=11)
 plt.xlabel(r"$\mathrm{Pump\,\,\,intensity}\,MW/cm^2$", fontsize=12)
 plt.ylabel(r"$\mathrm{Net\,\,\,Cooling\,\,\,Power}\,W/cm^3$", fontsize=12)
 plt.plot(js, np.zeros(Nstep), '--k')
-plt.ylim([-0.1, 10])
+plt.ylim([-0.1, 400])
 plt.show()

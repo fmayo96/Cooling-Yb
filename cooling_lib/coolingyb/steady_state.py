@@ -1,6 +1,21 @@
+import numpy as np
 from qutip import *
 from .parameters import Parameters as P
 from .aux_func import *
+
+with np.load('lines.npz') as data:
+    g = data['ECS_E_c_lines_T']
+
+g = g.reshape(10,3,4)
+g[:,[0,-1], :] = g[:,[-1,0], :]
+g /= g.sum(axis=2, keepdims=True)
+g *= 4
+Ts = [78, 100, 125, 150, 175, 200, 225, 250, 275, 300]
+gammas = {}
+for i,T in enumerate(Ts):
+    gammas[T] = g[i]
+
+
 
 def Steady_state(T, j_0_3, j_0_4):
     beta = 1/(T*P.kB)
@@ -23,8 +38,9 @@ def Steady_state(T, j_0_3, j_0_4):
     c_se = np.zeros((7,7))
     for i in range(4):
         for j in range(4, 7):
-            c_se[i,j] = 1
-    c_se = np.sqrt(P.gamma)*c_se
+            c_se[i,j] = (gammas[T][j-4,i])**0.5
+            #c_se[i,j] = 1
+    c_se *= P.gamma**0.5 
     c_se = Qobj(c_se)
 
     c_decay = np.zeros((7,7))
