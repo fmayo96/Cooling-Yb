@@ -40,7 +40,7 @@ def Steady_state(T, j_0_3, j_0_4):
         for j in range(4, 7):
             c_se[i,j] = (gammas[T][j-4,i])**0.5
             #c_se[i,j] = 1
-    c_se *= P.gamma**0.5 
+    c_se *= P.gamma**0.5 *1.15
     c_se = Qobj(c_se)
 
     c_decay = np.zeros((7,7))

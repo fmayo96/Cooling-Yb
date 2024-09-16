@@ -10,7 +10,7 @@ def Lindbladian(c_op : Qobj, rho : Qobj) -> Qobj:
   return L
 
 class Power:
-  def Net_Power(T, j_0_3, j_0_4):
+  def Net_Power(T, j_0_3, j_0_4, heating_data=False):
     rho = Steady_state(T, j_0_3, j_0_4)
     
     beta = 1/(T*P.kB)
@@ -49,7 +49,13 @@ class Power:
 
     Hs = np.diag([P.E0, P.E1, P.E2, P.E3, P.E4, P.E5, P.E6])
     Hs = Qobj(Hs/P.hbar)
-    Pcool = (Hs * L).tr() * n_ion * N_e * eta_e * P.hbar - P.alpha_imp * (j_0_4 + j_0_3) * 1e6
-    Pabs = (j_0_4 + j_0_3) * 1e6 * (P.alpha_imp + P.alpha_rad)
-    Pabs_me = (Hs * unitary).tr() * n_ion * N_e * eta_e * P.hbar + (j_0_4 + j_0_3) * 1e6 * P.alpha_imp
-    return np.real(Pcool), np.real(Pabs), np.real(Pabs_me)
+    Pimp = P.alpha_imp * (j_0_4 + j_0_3) * 1e6
+    Pcool = (Hs * L).tr() * n_ion * N_e * eta_e * P.hbar - Pimp
+    #Pabs = (j_0_4 + j_0_3) * 1e6 * (P.alpha_imp + P.alpha_rad)
+    Pabs_me = (Hs * unitary).tr() * n_ion * N_e * eta_e * P.hbar + Pimp
+
+    if heating_data == True:
+      non_rad_heating = -(Hs * Lindbladian(c_decay, rho)).tr() * n_ion * N_e * eta_e * P.hbar
+      return np.real(Pcool), np.real(Pabs_me), np.real(non_rad_heating), np.real(Pimp)   
+
+    return np.real(Pcool), np.real(Pabs_me)

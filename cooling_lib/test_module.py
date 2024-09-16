@@ -1,24 +1,51 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
 from coolingyb import Power, Parameters
+from matplotlib import cm
+from matplotlib import colors
 
-Nstep = 1000
+N = 100
 Ts = [300, 250, 200, 150]
-js = np.linspace(0, 2, Nstep)
-COLORS = ['C0', 'C1', 'C2', 'C3']
-#Parameters.d2 = 0.9 * Parameters.d
-plt.figure()
+
+j34 = np.linspace(0, 1.5, N)
+j24 = np.linspace(0, 1.5, N)
+
+J24, J34 = np.meshgrid(j34, j34)
+
+plt.figure(figsize=(10,10))
 for n,T in enumerate(Ts):
-  pow = np.zeros(Nstep)  
-  pow_sl = np.zeros(Nstep)
-  for i,j0 in enumerate(js):
-    pow[i], _, _ = Power.Net_Power(T, 0, j0)
-    pow_sl[i], _, _ = Power.Net_Power(T, j0, 0)
-  plt.plot(js, pow, color=COLORS[n], linewidth = 2, label = r"$T=$" + str(T))
-  plt.plot(js, pow_sl, '--', color=COLORS[n], linewidth = 2)
-plt.legend(fontsize=11)
-plt.xlabel(r"$\mathrm{Pump\,\,\,intensity}\,MW/cm^2$", fontsize=12)
-plt.ylabel(r"$\mathrm{Net\,\,\,Cooling\,\,\,Power}\,W/cm^3$", fontsize=12)
-plt.plot(js, np.zeros(Nstep), '--k')
-plt.ylim([-0.1, 400])
+  Pow = np.zeros((N, N))
+  Pabs = np.zeros((N, N))
+  eff = np.zeros((N, N))
+
+  for i in range(N):
+    for j in range(N):
+      Pow[i,j], Pabs[i,j] = Power.Net_Power(T, j24[i], j34[j])
+
+  for i in range(N):
+    for j in range(N):
+      if Pabs[i,j] == 0:
+        eff[i,j] = 0
+      else:
+        eff[i,j] = Pow[i,j] / Pabs[i,j]
+
+  plt.subplot(2,2, n+1)
+  plt.contourf(J34, J24, eff.T, 1000, cmap=cm.RdBu, vmax = np.max(eff), vmin = -np.max(eff))
+  plt.title("Cooling efficiency T = " + str(T))
+  if n >= 2:
+    plt.xlabel(r"$\mathrm{Pump\,\,\,Intensity\,\,\,}4\leftrightarrow 5\,\,(MW/cm^2)$", fontsize=12)
+  if n %2 ==  0:
+    plt.ylabel(r"$\mathrm{Pump\,\,\,Intensity\,\,\,}3\leftrightarrow 5\,\,(MW/cm^2)$", fontsize=12)
+  plt.colorbar()
+#plt.savefig('../results/two_laser_plots/eff_subplots.png', dpi=300)
 plt.show()
+
+
+# plt.figure()
+# plt.contourf(J34, J24, Pow.T, 1000, cmap=cm.RdBu, vmax = np.max(Pow), vmin = -np.max(Pow))
+# plt.title(r"$\mathrm{Net\,\,\,Cooling\,\,\,Power}\,\,\,W/cm^3\,\,\,T = $" + str(T) + r"$\,K$")
+# plt.xlabel(r"$\mathrm{Pump\,\,\,Intensity\,\,\,}4\leftrightarrow 5\,\,(MW/cm^2)$", fontsize=12)
+# plt.ylabel(r"$\mathrm{Pump\,\,\,Intensity\,\,\,}3\leftrightarrow 5\,\,(MW/cm^2)$", fontsize=12)
+# plt.colorbar()
+# plt.show()
+
