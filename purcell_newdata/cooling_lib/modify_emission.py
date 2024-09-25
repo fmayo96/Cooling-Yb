@@ -8,11 +8,11 @@ cavity_list = ["Feld 1987 for 971 nm.npz",
                "Spherical cavity for 971 nm.npz"]
 
 
-N = 300
-Ts = [300, 250, 200, 150, 100, 78]
-j0 = np.linspace(0, 10, N)
+N = 100
+Ts = [300, 250, 200, 150, 125, 100, 78]
+j0 = np.linspace(0, 2, N)
 
-COLORS = ['C3', 'C4', 'C0', 'C7', 'C8', 'k']
+COLORS = ['C3', 'C4', 'C0', 'C7', 'C8', 'C9','k']
 
 plt.figure()
 for n,T in enumerate(Ts):

@@ -11,8 +11,8 @@ def Steady_state(T, j_0_3, j_0_4, cavity):
     with np.load(cavity, allow_pickle = True) as data:
         g = data["convo_lines_T"]
         g = g[:,ORDER]
+        #g/= g.sum()
         g = g.reshape(10, 3, 4)
-        g /= g.sum(axis=2, keepdims=True)
     Ts = [78, 100, 125, 150, 175, 200, 225, 250, 275, 300]
     gammas = {}
     for i,Temp in enumerate(Ts):
@@ -45,7 +45,7 @@ def Steady_state(T, j_0_3, j_0_4, cavity):
     #c_se[3,4] *= (1-inhib) 
     #c_se[2,4] *= (1-inhib)
     #c_se[1,4] = 0
-    c_se *= P.gamma**0.5*1.5
+    c_se *= P.gamma**0.5
     c_se = Qobj(c_se)
 
     c_decay = np.zeros((7,7))

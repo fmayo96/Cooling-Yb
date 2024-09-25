@@ -42,7 +42,7 @@ def Steady_state(T, j_0_3, j_0_4, inhib):
     c_se[3,4] *= (1-inhib) 
     c_se[2,4] *= (1-inhib)
     #c_se[1,4] = 0
-    c_se *= P.gamma**0.5*1.5
+    c_se *= P.gamma**0.5
     c_se = Qobj(c_se)
 
     c_decay = np.zeros((7,7))
