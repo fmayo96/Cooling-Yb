@@ -132,7 +132,7 @@ def cavity_spont_emi_rate(str_,
     solid_angle= 8*np.pi*(b/L)**2
     
     gamma_total = np.array(gammaTotal(L,R,lambda_*1e-9,solid_angle))
-    
+    gamma_total += (1 - np.min(gamma_total))
     print(' inhibition: ',round(100*(1-min(gamma_total)),2),'%\n',
           'enhancement: ',round(max(gamma_total),2),'%')
     print(' Cavity length over mirror diameter:',L/(2*b))
@@ -150,29 +150,29 @@ def cavity_spont_emi_rate(str_,
         ax.grid()
 
     convo = []
-    for i in range(len(ACS_E_c)):
-        convo.append(ACS_E_c[i] * gamma_total)
+    for i in range(len(ECS_E_c)):
+        convo.append(ECS_E_c[i] * gamma_total)
     
     if spectra_plot == True:
         #%
-        mean_regular = np.zeros(len(ACS_E_c))
-        mean_cavity = np.zeros(len(ACS_E_c))
+        mean_regular = np.zeros(len(ECS_E_c))
+        mean_cavity = np.zeros(len(ECS_E_c))
         
         fig, ax = plt.subplots(2, 1, figsize=(8.5,6), dpi = 300)
-        for i in range(len(ACS_E_c)):
+        for i in range(len(ECS_E_c)):
             if i == 0:
                 ax[0].plot(lambda_, gamma_total,color = 'red', lw = 2, alpha = .5,
                            label = r'$F_P^{res}$ = ')
-                ax[0].plot(lambda_, ACS_E_c[i],
+                ax[0].plot(lambda_, ECS_E_c[i],
                         label = str(T[i])+' K')
                 ax[1].plot(lambda_, convo[i],
                         label = str(T[i])+' K')
             else:
-                ax[0].plot(lambda_, ACS_E_c[i],
+                ax[0].plot(lambda_, ECS_E_c[i],
                         label = str(T[i])+' K')
                 ax[1].plot(lambda_, convo[i],
                         label = str(T[i])+' K')
-            mean_regular[i] = mean_(lambda_, ACS_E_c[i])
+            mean_regular[i] = mean_(lambda_, ECS_E_c[i])
             mean_cavity[i] = mean_(lambda_, convo[i])
         
         
@@ -196,17 +196,17 @@ def cavity_spont_emi_rate(str_,
                       1154,1199,1460,1739])
     
     lambda_lines = lambda_[index_]
-    ACS_E_c_lines = []
+    ECS_E_c_lines = []
     convo_lines = []
-    for i in range(len(ACS_E_c)):
-        ACS_E_c_lines.append( ACS_E_c[i][index_] )
+    for i in range(len(ECS_E_c)):
+        ECS_E_c_lines.append( ECS_E_c[i][index_] )
         convo_lines.append( convo[i][index_] )
     
     
     if lines_plot == True:
         fig, ax = plt.subplots(1, 2, figsize=(8.5,4), dpi = 300)
-        for i in range(len(ACS_E_c_lines)):
-            ax[0].scatter(lambda_lines, ACS_E_c_lines[i],
+        for i in range(len(ECS_E_c_lines)):
+            ax[0].scatter(lambda_lines, ECS_E_c_lines[i],
                        s = 20, label = 'T ='+str(T[i]))
             ax[1].scatter(lambda_lines, convo_lines[i],
                        s = 20, label = 'T ='+str(T[i]))
@@ -216,7 +216,7 @@ def cavity_spont_emi_rate(str_,
         ax[0].legend(), ax[1].legend()
     
     if save_data == True:
-        np.savez(str_+'_abs',
+        np.savez(str_+"mod",
                   lambda_lines = lambda_lines,
                   convo_lines_T = convo_lines)
     
