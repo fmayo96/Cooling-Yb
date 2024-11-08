@@ -1,7 +1,9 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
-from coolingyb import Power
+from coolingyb import Power, Parameters
 
+Parameters.d *= 2
+Parameters.alpha_imp /= 6
 
 cavity_list = ["Reasonable cavity R_90_ecs.npz",
                "Reasonable cavity R_95_ecs.npz",
@@ -24,8 +26,11 @@ N = 100
 Ts = [300, 275, 250, 225, 200, 175, 150, 125, 100, 78]
 j0 = np.linspace(0, 2, N)
 
+alphas = [1/i for i in range(1,len(cavity_list)+1)]
+alphas = list(reversed(alphas))
+
 plt.figure()
-for cavity in cavity_list:
+for c,cavity in enumerate(cavity_list):
   eff_maxpow = np.zeros(len(Ts))
   for n,T in enumerate(Ts):
     pow = np.zeros(N)
@@ -37,16 +42,16 @@ for cavity in cavity_list:
 
   #np.save("mod_cav.npy", eff_maxpow)
 
-  eff_nocav = np.load("eff_maxpow.npy")
+  eff_nocav = np.load("eff_nocav.npy")
   #eff_mod = np.load("mod_cav.npy")
 
-  plt.plot(Ts, eff_maxpow, ".-", label = (cavity.split(" ")[2]).split(".")[0])
+  plt.plot(Ts, eff_maxpow, ".-C0", alpha=alphas[c], label = r"$R=0.$" + (cavity.split(" ")[2]).split(".")[0].split("_")[1])
 plt.plot(Ts, eff_nocav, "--k", label = "No cavity")
 #plt.plot(Ts, eff_mod, ".-k", label = "Purcell No inhibition")
-plt.legend()
+plt.legend(loc="lower right")
 plt.xlabel("T (K)", fontsize=14)
 plt.ylabel(r"$\eta$", fontsize=14)
 plt.xticks(Ts, fontsize=11)
 plt.yticks(fontsize=11)
-plt.savefig("eff_vs_T.png", dpi=800)
+plt.savefig("eff_vs_T_vs_R.pdf", dpi=800)
 plt.show()
