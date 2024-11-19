@@ -235,7 +235,7 @@ def cavity_spont_emi_rate(str_,
     gamma_total = np.array(gammaTotal(L,R,lambda_*1e-9,solid_angle))
     inhibition = 1-min(gamma_total)
     enhancement = max(gamma_total)
-    
+    gamma_total += inhibition
     print(' inhibition: ',round(100*(1-min(gamma_total)),2),'%\n',
           'enhancement: ',round(max(gamma_total),2),'%')
     print(' Cavity length over mirror diameter:',L/(2*b))
@@ -505,7 +505,7 @@ def cavity_spont_emi_rate(str_,
     
     ################### Save data ##################################################
     if save_data == True:
-        np.savez(str_+'_ecs',
+        np.savez(str_+'_ecs_noinhib',
                   lambda_lines = lambda_lines,
                   convo_lines_T = convo_lines,
                   param_ = [L,b,R,width_fit_gamma],
