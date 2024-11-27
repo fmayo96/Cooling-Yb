@@ -1,7 +1,12 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
 from coolingyb import Power, Parameters
-
+plt.rcParams.update({'font.size': 7,
+                     'lines.linewidth': 1,
+                     'mathtext.default': 'regular',
+                     'font.family': 'serif',
+                     'figure.dpi': 300,
+                     'grid.color': (0.5, 0.5, 0.5, 0.3)})
 Parameters.d *= 2
 Parameters.alpha_imp /= 6
 
@@ -29,7 +34,7 @@ j0 = np.linspace(0, 2, N)
 alphas = [1/i for i in range(1,len(cavity_list)+1)]
 alphas = list(reversed(alphas))
 
-plt.figure()
+plt.figure(figsize=(4,3.7))
 for c,cavity in enumerate(cavity_list):
   eff_maxpow = np.zeros(len(Ts))
   for n,T in enumerate(Ts):
@@ -45,13 +50,13 @@ for c,cavity in enumerate(cavity_list):
   eff_nocav = np.load("eff_nocav.npy")
   #eff_mod = np.load("mod_cav.npy")
 
-  plt.plot(Ts, eff_maxpow, ".-C0", alpha=alphas[c], label = r"$R=0.$" + (cavity.split(" ")[2]).split(".")[0].split("_")[1])
-plt.plot(Ts, eff_nocav, "--k", label = "No cavity")
+  plt.plot(Ts, eff_maxpow, ".-C0", alpha=alphas[c], label = r"$R=0.$" + (cavity.split(" ")[2]).split(".")[0].split("_")[1] + " Pumping: "+ r"$2\leftrightarrow 5$")
+plt.plot(Ts, eff_nocav, "--k", label = "No cavity: Pumping " + r"$4\leftrightarrow 5$")
 #plt.plot(Ts, eff_mod, ".-k", label = "Purcell No inhibition")
 plt.legend(loc="lower right")
-plt.xlabel("T (K)", fontsize=14)
-plt.ylabel(r"$\eta$", fontsize=14)
-plt.xticks(Ts, fontsize=11)
-plt.yticks(fontsize=11)
-#plt.savefig("eff_vs_T_vs_R.pdf", dpi=800)
+plt.xlabel("T (K)", fontsize=9)
+plt.ylabel(r"$\eta$", fontsize=9)
+plt.xticks(Ts)
+plt.tight_layout()
+plt.savefig("eff_vs_T_vs_R.pdf")
 plt.show()

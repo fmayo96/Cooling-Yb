@@ -1,6 +1,13 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
 from coolingyb import Power, Parameters
+plt.rcParams.update({'font.size': 7,
+                     'lines.linewidth': 1,
+                     'mathtext.default': 'regular',
+                     'font.family': 'serif',
+                     'figure.dpi': 300,
+                     'grid.color': (0.5, 0.5, 0.5, 0.3)})
+
 
 Parameters.d *= 2
 Parameters.alpha_imp /= 6
@@ -33,11 +40,13 @@ for n, T in enumerate(Ts):
   effMax_no[n] = eff_no[idx]
 
 
-plt.figure()
-plt.plot(Ts, effMax/effMax_no, '.-', label = "Inhibition")
-#plt.plot(Ts, effMax_no, '.-k', label = "No Inhibition")
-plt.xlabel('T (K)', fontsize=12)
-plt.ylabel(r"$\eta$", fontsize=12)
+plt.figure(figsize=(3.5,3.3))
+plt.plot(Ts, effMax, '.-', label = "Inhibition")
+plt.plot(Ts, effMax_no, '.-k', label = "No Inhibition")
+plt.xlabel('T (K)', fontsize=9)
+plt.ylabel(r"$\eta$", fontsize=9)
 plt.legend(fontsize=11)
-#plt.savefig("Inhibition_vs_NoInhibition.pdf", dpi=800)
+plt.ticklabel_format(axis='y', style='sci', scilimits=(0,0))
+plt.tight_layout()
+plt.savefig("Inhibition_vs_NoInhibition.pdf")
 plt.show()
