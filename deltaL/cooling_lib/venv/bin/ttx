@@ -1,4 +1,4 @@
-#!/Users/francomayo/Doctorado/Cooling-Yb/purcell_final/cooling_lib/venv/bin/python3.12
+#!/home/franco/Doctorado/Cooling-Yb/deltaL/cooling_lib/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
